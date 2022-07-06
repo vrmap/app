@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="it">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="assets/lib/bootstrap-5.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <title>Report Famiglie</title>
+
+</head>
+
+<body>
+    <br>
+    <div class="container-fluid ">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="input-group mb-3">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <input class="form-control" type="file" id="fileUpload" onchange="Upload()" accept=".xls,.xlsx">
+            </div>
+            <!--
+            <div class="col-md-2">
+                 
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#Modal_istruzioni">
+                    Istruzioni
+                </button>
+            </div>
+            -->
+            <div class="col-md-2">
+                <div id="dow"></div>
+            </div>
+        </div>
+
+        <div class="d-flex">
+            Elimina sospesi &nbsp; &nbsp;
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radio_soglia" value="si"
+                    onchange="mostra_mia_lista()" id="filtro_soglia_1" checked>
+                <label class="form-check-label text-nowrap" for="filtro_soglia_1">Si</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radio_soglia" value="no"
+                    onchange="mostra_mia_lista()" id="filtro_soglia_2">
+                <label class="form-check-label" for="filtro_soglia_2">No</label>
+            </div>
+        </div>
+
+
+
+
+        <div id="Messaggio_Filtro"></div>
+        <div id="Messaggio_Statistiche"></div>
+
+
+        <hr />
+        <div>
+            <pre id="dataTable"></pre>
+        </div>
+    </div>
+
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="Modal_istruzioni" tabindex="-1" aria-labelledby="Modal_istruzioni_Label"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="Modal_istruzioni_Label">Istruzioni report vendite</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <font color="blue">1. aprire il gestionale</font><br>
+                    <font color="blue">2. selezionare backend</font><br>
+                    <font color="blue">3. selezionare Clienti --> Elenco clienti</font><br>
+                    <font color="blue">4. cliccare su Esporta lista famiglie</font><br>
+                    <i>--- verrà salvato un file excel sul computer ---</i><br>
+                    <font color="green">5. impostare la soglia scadenza tessera</font><br>
+                    <font color="green">6. cliccare sul tasto grigio "Scegli file" al centro di questa pagina
+                    </font>
+                    <br>
+                    <font color="green">7. selezionare il file precedentemente salvato (punto 4)</font><br>
+                    <i>--- verrà avviata l'elaborazione dei dati e stilato un prospetto ---</i><br>
+                    <font color="green">8. per salvare in un file excel cliccare su Download</font>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="assets/lib/bootstrap-5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="assets/lib/xlsx/js/xlsx.full.min.js"></script>
+    <script type="text/javascript" src="assets/lib/xlsx/js/jszip.js"></script>
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="assets/lib/moment-2.29.1/moment.min.js"></script>
+    <script type="text/javascript" src="assets/js/famiglie.js"></script>
+</body>
+
+</html>

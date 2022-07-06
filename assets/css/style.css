@@ -1,0 +1,33 @@
+#riga_intestazione {
+    text-align: center;
+    white-space: nowrap
+}
+#riga {
+
+    white-space: nowrap
+}
+
+#num {
+    text-align: center;
+    
+}
+
+#eta {
+    text-align: center;
+}
+
+#sesso {
+    text-align: center;
+}
+
+#eta_precisa {
+    text-align: center;
+}
+#sospeso {
+    text-align: center;
+}
+
+.d-flex {
+    display: flex !important;
+    align-items: baseline;
+}
