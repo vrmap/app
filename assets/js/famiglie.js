@@ -278,7 +278,7 @@ function mostra_mia_lista() {
 
                 var data_nascita = mia_lista[i].data_nascita;
                 if (data_nascita !== undefined) {
-                    //var data_nascita_formattata = moment(data_nascita).format("DD/MM/YYYY");
+                    var data_nascita_formattata = moment(data_nascita).format("DD/MM/YYYY");
                     //var now = moment();
                     //const dataCorrente = moment(new Date(now));
                     const returnDate = moment(new Date(data_nascita));
