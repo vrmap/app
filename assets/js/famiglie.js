@@ -243,6 +243,7 @@ function mostra_mia_lista() {
             "<th>Presentato_da</th>" +
             "<th>Sospeso</th>" +
             "<th>Età precisa</th>" +
+            "<th>Scadenza</th>" +            
             "</tr>" +
             "</thead>";
 
@@ -303,6 +304,8 @@ function mostra_mia_lista() {
                 if (presentato_da == undefined) presentato_da = "";
                 var sospeso = mia_lista[i].sospeso;
                 if (sospeso == undefined) sospeso = "";
+                var scadenza = mia_lista[i].scadenza;
+                if (scadenza == undefined) scadenza = "";
 
                 result += "<tr id = 'riga'>" +
                     "<td id = 'num'>" + k + "</td>" +
@@ -320,6 +323,7 @@ function mostra_mia_lista() {
                     "<td>" + presentato_da + "</td>" +
                     "<td id = 'sospeso'>" + sospeso + "</td>" +
                     "<td id = 'eta_precisa'>" + eta_precisa + "</td>" +
+                    "<td id = 'scadenza'>" + scadenza + "</td>" +                    
                     "</tr>";
 
                 if (id != precedente) {
