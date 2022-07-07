@@ -1,4 +1,5 @@
 
+var famiglie = []
 function Upload() {
     //Reference the FileUpload element.
     var fileUpload = document.getElementById("fileUpload");
@@ -45,13 +46,15 @@ function ProcessExcel(data) {
 
     //Read all rows from First Sheet into an JSON array.
     var excelRows = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[firstSheet], { header: 1 }).splice(1);// crea un oggetto json contenente tutte le righe del excel salta la prima riga
-    console.log("lista Excel")
-    console.log(excelRows);
 
-    mostra_mia_lista(excelRows)
+    famiglie = excelRows
+    mostra_mia_lista()
 }
-function mostra_mia_lista(excelRows) {
-    var soglia = document.querySelector('input[name="radio_soglia"]:checked').value;
+function mostra_mia_lista() {
+    var excelRows = famiglie
+    var filtro_elimina_sospesi = document.querySelector('input[name="radio_sospesi"]:checked').value;
+    var filtro_tessera_valida = document.querySelector('input[name="radio_tessera_valida"]:checked').value;
+
     var mia_lista = [];
     for (var i = 0; i < excelRows.length; i++) {
         mia_lista.push({
@@ -67,7 +70,8 @@ function mostra_mia_lista(excelRows) {
             nazionalita: excelRows[i][9],
             sesso: excelRows[i][10],
             presentato_da: excelRows[i][23],
-            sospeso: excelRows[i][25]
+            sospeso: excelRows[i][25],
+            scadenza: excelRows[i][24]
         });
         if (excelRows[i][35] != undefined && excelRows[i][35] != "") {
             mia_lista.push({
@@ -83,7 +87,8 @@ function mostra_mia_lista(excelRows) {
                 nazionalita: excelRows[i][43],
                 sesso: excelRows[i][44],
                 presentato_da: excelRows[i][23],
-                sospeso: excelRows[i][25]
+                sospeso: excelRows[i][25],
+                scadenza: excelRows[i][24]
             });
         }
         if (excelRows[i][45] != undefined && excelRows[i][45] != "") {
@@ -100,7 +105,8 @@ function mostra_mia_lista(excelRows) {
                 nazionalita: excelRows[i][53],
                 sesso: excelRows[i][54],
                 presentato_da: excelRows[i][23],
-                sospeso: excelRows[i][25]
+                sospeso: excelRows[i][25],
+                scadenza: excelRows[i][24]
             });
         }
         if (excelRows[i][55] != undefined && excelRows[i][55] != "") {
@@ -117,7 +123,8 @@ function mostra_mia_lista(excelRows) {
                 nazionalita: excelRows[i][63],
                 sesso: excelRows[i][64],
                 presentato_da: excelRows[i][23],
-                sospeso: excelRows[i][25]
+                sospeso: excelRows[i][25],
+                scadenza: excelRows[i][24]
             });
         }
         if (excelRows[i][65] != undefined && excelRows[i][65] != "") {
@@ -134,7 +141,8 @@ function mostra_mia_lista(excelRows) {
                 nazionalita: excelRows[i][73],
                 sesso: excelRows[i][74],
                 presentato_da: excelRows[i][23],
-                sospeso: excelRows[i][25]
+                sospeso: excelRows[i][25],
+                scadenza: excelRows[i][24]
             });
         }
         if (excelRows[i][75] != undefined && excelRows[i][75] != "") {
@@ -151,7 +159,8 @@ function mostra_mia_lista(excelRows) {
                 nazionalita: excelRows[i][83],
                 sesso: excelRows[i][84],
                 presentato_da: excelRows[i][23],
-                sospeso: excelRows[i][25]
+                sospeso: excelRows[i][25],
+                scadenza: excelRows[i][24]
             });
         }
         if (excelRows[i][85] != undefined && excelRows[i][85] != "") {
@@ -168,7 +177,8 @@ function mostra_mia_lista(excelRows) {
                 nazionalita: excelRows[i][93],
                 sesso: excelRows[i][94],
                 presentato_da: excelRows[i][23],
-                sospeso: excelRows[i][25]
+                sospeso: excelRows[i][25],
+                scadenza: excelRows[i][24]
             });
         }
         if (excelRows[i][95] != undefined && excelRows[i][95] != "") {
@@ -185,7 +195,8 @@ function mostra_mia_lista(excelRows) {
                 nazionalita: excelRows[i][103],
                 sesso: excelRows[i][104],
                 presentato_da: excelRows[i][23],
-                sospeso: excelRows[i][25]
+                sospeso: excelRows[i][25],
+                scadenza: excelRows[i][24]
             });
         }
         if (excelRows[i][105] != undefined && excelRows[i][105] != "") {
@@ -202,7 +213,8 @@ function mostra_mia_lista(excelRows) {
                 nazionalita: excelRows[i][113],
                 sesso: excelRows[i][104],
                 presentato_da: excelRows[i][23],
-                sospeso: excelRows[i][25]
+                sospeso: excelRows[i][25],
+                scadenza: excelRows[i][24]
             });
         }
     }
@@ -233,15 +245,30 @@ function mostra_mia_lista(excelRows) {
             "<th>Età precisa</th>" +
             "</tr>" +
             "</thead>";
+
+
+        var k = 0; // contatore colonna Num della tabella
+        var z = 0; // contafamiglie
+        var now = moment();
+        const dataCorrente = moment(new Date(now));
+        var precedente = "";
         for (var i = 0; i < mia_lista.length; i++) {
             if (mia_lista[i].codice_fiscale != "ALTRO" & mia_lista[i].codice_fiscale != "OPERASILENTE") {
 
-                if (soglia === "si") {
+                if (filtro_elimina_sospesi === "si") {
                     mia_lista = mia_lista.filter((f) => f.sospeso != 1
                     );
                 }
 
-                var k = parseInt(i) + 1;
+                //if (filtro_tessera_valida === "si") {
+                //    mia_lista = mia_lista.filter((f) => f.scadenza >= dataCorrente
+                //    );
+                //}
+
+
+
+
+                var k = parseInt(i) + 1; // contatore colonna Num della tabella
                 var id = mia_lista[i].id;
                 var codice_fiscale = mia_lista[i].codice_fiscale;
                 var cognome = mia_lista[i].cognome;
@@ -251,15 +278,15 @@ function mostra_mia_lista(excelRows) {
 
                 var data_nascita = mia_lista[i].data_nascita;
                 if (data_nascita !== undefined) {
-                    var data_nascita_formattata = moment(data_nascita).format("DD/MM/YYYY");
-                    var now = moment();
-                    const dataCorrente = moment(new Date(now));
+                    //var data_nascita_formattata = moment(data_nascita).format("DD/MM/YYYY");
+                    //var now = moment();
+                    //const dataCorrente = moment(new Date(now));
                     const returnDate = moment(new Date(data_nascita));
                     var eta_precisa = dataCorrente.diff(returnDate, 'years', true).toFixed(1);
                 }
                 else {
-                    data_nascita_formattata = "";
-                    eta_precisa = "";
+                    var data_nascita_formattata = "";
+                    var eta_precisa = "";
                 }
 
                 var eta = mia_lista[i].eta;
@@ -295,8 +322,28 @@ function mostra_mia_lista(excelRows) {
                     "<td id = 'eta_precisa'>" + eta_precisa + "</td>" +
                     "</tr>";
 
+                if (id != precedente) {
+                    precedente = id
+                    z++// contafamiglie
+                }
             }
         }
+
+        console.log(mia_lista);
+        console.log(k);
+        console.log(z);
+        let testo_statistiche = z + " famiglie " + k + " componenti";
+        document.getElementById("Messaggio_Statistiche").innerHTML = testo_statistiche;
+
+
+
+
+
+
+
+
+
+
         result += "</table>";
         var div = document.getElementById('dataTable');
         div.innerHTML = result;
