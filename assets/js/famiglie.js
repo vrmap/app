@@ -235,11 +235,8 @@ function mostra_mia_lista() {
             });
         }
     }
-    console.log("mia_lista")
-    console.log(mia_lista)
-    //console.log(mia_lista[i].data_nascita)
-
-
+    
+    // ===========================================================================================
     if (mia_lista) {
         const visualizzaNum = document.querySelector('#num');
         const visualizzaId = document.querySelector('#id');
@@ -288,8 +285,6 @@ function mostra_mia_lista() {
             "</tr>" +
             "</thead>";
 
-        //if (mia_lista[i].data_nascita !== undefined) var annoNascita = mia_lista[i].data_nascita.substr(0, 4)
-        //console.log(annoNascita)
         var k = 0; // contatore colonna Num della tabella
         var z = 0; // contafamiglie
         var now = moment();
@@ -301,10 +296,6 @@ function mostra_mia_lista() {
         var filtro_tessera_valida = document.querySelector('input[name="radio_tessera_valida"]:checked').value;
         var filtro_comune_selezionato = document.querySelector('input[name="radioFilter"]:checked').value;
         var filtro_anni = document.querySelector('input[name="anniFilter"]:checked').value;
-
-
-
-
 
 
         if (filtro_elimina_sospesi === "si") {
@@ -337,113 +328,106 @@ function mostra_mia_lista() {
             mia_lista = mia_lista.filter((f) => f.eta == 16 || f.eta == 17
             );
         }
-
-
-
         if (filtro_anni == "2004-2016") {
-            if (mia_lista[i].data_nascita !== undefined && mia_lista[i].data_nascita !== "") {
-                mia_lista = mia_lista.filter((f) => f.mia_lista[i].data_nascita.substr(0, 4) >= 2004
-                );
-            }
+            mia_lista = mia_lista.filter((f) => f.data_nascita != undefined && parseInt(f.data_nascita.substr(0, 4)) >= 2004 && f.data_nascita != undefined && parseInt(f.data_nascita.substr(0, 4)) <= 2016
+            );
         }
 
+        mia_lista = mia_lista.filter((f) => f.codice_fiscale !== "ALTRO" && f.codice_fiscale !== "OPERASILENTE");
 
         for (var i = 0; i < mia_lista.length; i++) {
-            var query_altro = mia_lista[i].codice_fiscale !== "ALTRO";
-            var query_operasilente = mia_lista[i].codice_fiscale !== "OPERASILENTE";
-            if (query_altro && query_operasilente) {
+            //var query_altro = mia_lista[i].codice_fiscale !== "ALTRO";
+            //var query_operasilente = mia_lista[i].codice_fiscale !== "OPERASILENTE";
+            //if (query_altro && query_operasilente) {
+            var k = parseInt(i) + 1; // contatore colonna Num della tabella
+            var id = mia_lista[i].id;
+            var codice_fiscale = mia_lista[i].codice_fiscale;
+            var cognome = mia_lista[i].cognome;
+            var nome = mia_lista[i].nome;
+            var ruolo = mia_lista[i].ruolo;
+            if (ruolo == undefined) ruolo = "";
 
-                //if (mia_lista[i].codice_fiscale != "ALTRO" & mia_lista[i].codice_fiscale != "OPERASILENTE") {
-
-                var k = parseInt(i) + 1; // contatore colonna Num della tabella
-                var id = mia_lista[i].id;
-                var codice_fiscale = mia_lista[i].codice_fiscale;
-                var cognome = mia_lista[i].cognome;
-                var nome = mia_lista[i].nome;
-                var ruolo = mia_lista[i].ruolo;
-                if (ruolo == undefined) ruolo = "";
-
-                var data_nascita = mia_lista[i].data_nascita;
-                if (data_nascita !== undefined && data_nascita !== "") {
-                    var data_nascita_formattata = moment(data_nascita).format("DD/MM/YYYY");
-                    //var now = moment();
-                    //const dataCorrente = moment(new Date(now));
-                    const returnDate = moment(new Date(data_nascita));
-                    var eta_precisa = dataCorrente.diff(returnDate, 'years', true).toFixed(1);
-                    const data_Nascita_Array = data_nascita.split("-");
-                    var anno_nascita = data_Nascita_Array[0];
-                    //console.log(anno_nascita)
-                }
-                else {
-                    var data_nascita_formattata = "";
-                    var eta_precisa = "";
-                    var anno_nascita = "";
-                }
-
-                var eta = mia_lista[i].eta;
-                if (eta == undefined) eta = "";
-                var luogo_nascita = mia_lista[i].luogo_nascita;
-                if (luogo_nascita == undefined) luogo_nascita = "";
-                var nazione_nascita = mia_lista[i].nazione_nascita;
-                if (nazione_nascita == undefined) nazione_nascita = "";
-                var nazionalita = mia_lista[i].nazionalita;
-                if (nazionalita == undefined) nazionalita = "";
-                var sesso = mia_lista[i].sesso;
-                if (sesso == undefined) sesso = "";
-                var presentato_da = mia_lista[i].presentato_da;
-                if (presentato_da == undefined) presentato_da = "";
-                var sospeso = mia_lista[i].sospeso;
-                if (sospeso == undefined) sospeso = "";
-                var scadenza = mia_lista[i].scadenza;
-                if (scadenza == undefined) scadenza = "";
-                var cognome_titolare = mia_lista[i].cognome_titolare;
-                var nome_titolare = mia_lista[i].nome_titolare;
-
-
-
-
-
-
-
-                if (visualizzaNum.checked == false) var rigaNum = "<td style='display:none;' id = 'num'>" + k + "</td>";
-                else var rigaNum = "<td id = 'num'>" + k + "</td>";
-                if (visualizzaId.checked == false) var rigaId = "<td style='display:none;'>" + id + "</td>";
-                else var rigaId = "<td>" + id + "</td>";
-                if (visualizzaCf.checked == false) var rigaCf = "<td style='display:none;'>" + codice_fiscale + "</td>";
-                else var rigaCf = "<td>" + codice_fiscale + "</td>";
-                if (visualizzaCog.checked == false) var rigaCog = "<td style='display:none;'>" + cognome + "</td>";
-                else var rigaCog = "<td>" + cognome + "</td>";
-
-
-
-                result += "<tr id = 'riga'>" +
-                    rigaNum +
-                    rigaId +
-                    rigaCf +
-                    rigaCog +
-                    "<td>" + nome + "</td>" +
-                    "<td>" + ruolo + "</td>" +
-                    "<td>" + data_nascita_formattata + "</td>" +
-                    "<td>" + anno_nascita + "</td>" +
-                    "<td id = 'eta'>" + eta + "</td>" +
-                    "<td>" + luogo_nascita + "</td>" +
-                    "<td>" + nazione_nascita + "</td>" +
-                    "<td>" + nazionalita + "</td>" +
-                    "<td id = 'sesso'>" + sesso + "</td>" +
-                    "<td>" + presentato_da + "</td>" +
-                    "<td id = 'sospeso'>" + sospeso + "</td>" +
-                    "<td id = 'eta_precisa'>" + eta_precisa + "</td>" +
-                    "<td id = 'scadenza'>" + scadenza + "</td>" +
-                    "<td>" + cognome_titolare + "</td>" +
-                    "<td>" + nome_titolare + "</td>" +
-
-                    "</tr>";
-
-                if (id != precedente) {
-                    precedente = id
-                    z++// contafamiglie
-                }
+            var data_nascita = mia_lista[i].data_nascita;
+            if (data_nascita !== undefined && data_nascita !== "") {
+                var data_nascita_formattata = moment(data_nascita).format("DD/MM/YYYY");
+                //var now = moment();
+                //const dataCorrente = moment(new Date(now));
+                const returnDate = moment(new Date(data_nascita));
+                var eta_precisa = dataCorrente.diff(returnDate, 'years', true).toFixed(1);
+                const data_Nascita_Array = data_nascita.split("-");
+                var anno_nascita = data_Nascita_Array[0];
+                //console.log(anno_nascita)
             }
+            else {
+                var data_nascita_formattata = "";
+                var eta_precisa = "";
+                var anno_nascita = "";
+            }
+
+            var eta = mia_lista[i].eta;
+            if (eta == undefined) eta = "";
+            var luogo_nascita = mia_lista[i].luogo_nascita;
+            if (luogo_nascita == undefined) luogo_nascita = "";
+            var nazione_nascita = mia_lista[i].nazione_nascita;
+            if (nazione_nascita == undefined) nazione_nascita = "";
+            var nazionalita = mia_lista[i].nazionalita;
+            if (nazionalita == undefined) nazionalita = "";
+            var sesso = mia_lista[i].sesso;
+            if (sesso == undefined) sesso = "";
+            var presentato_da = mia_lista[i].presentato_da;
+            if (presentato_da == undefined) presentato_da = "";
+            var sospeso = mia_lista[i].sospeso;
+            if (sospeso == undefined) sospeso = "";
+            var scadenza = mia_lista[i].scadenza;
+            if (scadenza == undefined) scadenza = "";
+            var cognome_titolare = mia_lista[i].cognome_titolare;
+            var nome_titolare = mia_lista[i].nome_titolare;
+
+
+
+
+
+
+
+            if (visualizzaNum.checked == false) var rigaNum = "<td style='display:none;' id = 'num'>" + k + "</td>";
+            else var rigaNum = "<td id = 'num'>" + k + "</td>";
+            if (visualizzaId.checked == false) var rigaId = "<td style='display:none;'>" + id + "</td>";
+            else var rigaId = "<td>" + id + "</td>";
+            if (visualizzaCf.checked == false) var rigaCf = "<td style='display:none;'>" + codice_fiscale + "</td>";
+            else var rigaCf = "<td>" + codice_fiscale + "</td>";
+            if (visualizzaCog.checked == false) var rigaCog = "<td style='display:none;'>" + cognome + "</td>";
+            else var rigaCog = "<td>" + cognome + "</td>";
+
+
+
+            result += "<tr id = 'riga'>" +
+                rigaNum +
+                rigaId +
+                rigaCf +
+                rigaCog +
+                "<td>" + nome + "</td>" +
+                "<td>" + ruolo + "</td>" +
+                "<td>" + data_nascita_formattata + "</td>" +
+                "<td>" + anno_nascita + "</td>" +
+                "<td id = 'eta'>" + eta + "</td>" +
+                "<td>" + luogo_nascita + "</td>" +
+                "<td>" + nazione_nascita + "</td>" +
+                "<td>" + nazionalita + "</td>" +
+                "<td id = 'sesso'>" + sesso + "</td>" +
+                "<td>" + presentato_da + "</td>" +
+                "<td id = 'sospeso'>" + sospeso + "</td>" +
+                "<td id = 'eta_precisa'>" + eta_precisa + "</td>" +
+                "<td id = 'scadenza'>" + scadenza + "</td>" +
+                "<td>" + cognome_titolare + "</td>" +
+                "<td>" + nome_titolare + "</td>" +
+
+                "</tr>";
+
+            if (id != precedente) {
+                precedente = id
+                z++// contafamiglie
+            }
+            //}
         }
 
         console.log(mia_lista);
