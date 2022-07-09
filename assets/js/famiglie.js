@@ -71,7 +71,9 @@ function mostra_mia_lista() {
             sesso: excelRows[i][10],
             presentato_da: excelRows[i][23],
             sospeso: excelRows[i][25],
-            scadenza: excelRows[i][24]
+            scadenza: excelRows[i][24],
+            cognome_titolare: excelRows[i][2],
+            nome_titolare: excelRows[i][3]
         });
         if (excelRows[i][35] != undefined && excelRows[i][35] != "") {
             mia_lista.push({
@@ -88,7 +90,9 @@ function mostra_mia_lista() {
                 sesso: excelRows[i][44],
                 presentato_da: excelRows[i][23],
                 sospeso: excelRows[i][25],
-                scadenza: excelRows[i][24]
+                scadenza: excelRows[i][24],
+                cognome_titolare: excelRows[i][2],
+                nome_titolare: excelRows[i][3]
             });
         }
         if (excelRows[i][45] != undefined && excelRows[i][45] != "") {
@@ -106,7 +110,9 @@ function mostra_mia_lista() {
                 sesso: excelRows[i][54],
                 presentato_da: excelRows[i][23],
                 sospeso: excelRows[i][25],
-                scadenza: excelRows[i][24]
+                scadenza: excelRows[i][24],
+                cognome_titolare: excelRows[i][2],
+                nome_titolare: excelRows[i][3]
             });
         }
         if (excelRows[i][55] != undefined && excelRows[i][55] != "") {
@@ -124,7 +130,9 @@ function mostra_mia_lista() {
                 sesso: excelRows[i][64],
                 presentato_da: excelRows[i][23],
                 sospeso: excelRows[i][25],
-                scadenza: excelRows[i][24]
+                scadenza: excelRows[i][24],
+                cognome_titolare: excelRows[i][2],
+                nome_titolare: excelRows[i][3]
             });
         }
         if (excelRows[i][65] != undefined && excelRows[i][65] != "") {
@@ -142,7 +150,9 @@ function mostra_mia_lista() {
                 sesso: excelRows[i][74],
                 presentato_da: excelRows[i][23],
                 sospeso: excelRows[i][25],
-                scadenza: excelRows[i][24]
+                scadenza: excelRows[i][24],
+                cognome_titolare: excelRows[i][2],
+                nome_titolare: excelRows[i][3]
             });
         }
         if (excelRows[i][75] != undefined && excelRows[i][75] != "") {
@@ -160,7 +170,9 @@ function mostra_mia_lista() {
                 sesso: excelRows[i][84],
                 presentato_da: excelRows[i][23],
                 sospeso: excelRows[i][25],
-                scadenza: excelRows[i][24]
+                scadenza: excelRows[i][24],
+                cognome_titolare: excelRows[i][2],
+                nome_titolare: excelRows[i][3]
             });
         }
         if (excelRows[i][85] != undefined && excelRows[i][85] != "") {
@@ -178,7 +190,9 @@ function mostra_mia_lista() {
                 sesso: excelRows[i][94],
                 presentato_da: excelRows[i][23],
                 sospeso: excelRows[i][25],
-                scadenza: excelRows[i][24]
+                scadenza: excelRows[i][24],
+                cognome_titolare: excelRows[i][2],
+                nome_titolare: excelRows[i][3]
             });
         }
         if (excelRows[i][95] != undefined && excelRows[i][95] != "") {
@@ -196,7 +210,9 @@ function mostra_mia_lista() {
                 sesso: excelRows[i][104],
                 presentato_da: excelRows[i][23],
                 sospeso: excelRows[i][25],
-                scadenza: excelRows[i][24]
+                scadenza: excelRows[i][24],
+                cognome_titolare: excelRows[i][2],
+                nome_titolare: excelRows[i][3]
             });
         }
         if (excelRows[i][105] != undefined && excelRows[i][105] != "") {
@@ -214,7 +230,9 @@ function mostra_mia_lista() {
                 sesso: excelRows[i][104],
                 presentato_da: excelRows[i][23],
                 sospeso: excelRows[i][25],
-                scadenza: excelRows[i][24]
+                scadenza: excelRows[i][24],
+                cognome_titolare: excelRows[i][2],
+                nome_titolare: excelRows[i][3]
             });
         }
     }
@@ -223,7 +241,7 @@ function mostra_mia_lista() {
 
 
     if (mia_lista) {
-        var result = "<table id='tabella' class='display' style='font-size:0.8em' width:'100%'>" +
+        var result = "<table id='tabella' class='display'>" +
             "<thead id = 'riga_intestazione'>" +
             "<tr>" +                               //Change table headings to match witht he Google Sheet
             //"<th>Delete</th>"+
@@ -235,6 +253,7 @@ function mostra_mia_lista() {
             "<th>Nome</th>" +
             "<th>Ruolo</th>" +
             "<th>Data nascita</th>" +
+            "<th>Anno nascita</th>" +
             "<th align='center'>Età</th>" +
             "<th>Luogo nascita</th>" +
             "<th>Nazione nascita</th>" +
@@ -243,7 +262,10 @@ function mostra_mia_lista() {
             "<th>Presentato_da</th>" +
             "<th>Sospeso</th>" +
             "<th>Età precisa</th>" +
-            "<th>Scadenza</th>" +            
+            "<th>Scadenza</th>" +
+            "<th>Cognome Titolare</th>" +
+            "<th>Nome Titolare</th>" +
+
             "</tr>" +
             "</thead>";
 
@@ -284,10 +306,15 @@ function mostra_mia_lista() {
                     //const dataCorrente = moment(new Date(now));
                     const returnDate = moment(new Date(data_nascita));
                     var eta_precisa = dataCorrente.diff(returnDate, 'years', true).toFixed(1);
+                    
+                    const data_Nascita_Array = data_nascita.split("-");
+                    var anno_nascita = data_Nascita_Array[0];
+                    //console.log(anno_nascita)
                 }
                 else {
                     var data_nascita_formattata = "";
                     var eta_precisa = "";
+                    var anno_nascita = "";                   
                 }
 
                 var eta = mia_lista[i].eta;
@@ -306,6 +333,20 @@ function mostra_mia_lista() {
                 if (sospeso == undefined) sospeso = "";
                 var scadenza = mia_lista[i].scadenza;
                 if (scadenza == undefined) scadenza = "";
+                var cognome_titolare = mia_lista[i].cognome_titolare;
+                var nome_titolare = mia_lista[i].nome_titolare;
+
+
+                //
+
+
+
+
+
+
+
+
+
 
                 result += "<tr id = 'riga'>" +
                     "<td id = 'num'>" + k + "</td>" +
@@ -315,6 +356,7 @@ function mostra_mia_lista() {
                     "<td>" + nome + "</td>" +
                     "<td>" + ruolo + "</td>" +
                     "<td>" + data_nascita_formattata + "</td>" +
+                    "<td>" + anno_nascita + "</td>" +                    
                     "<td id = 'eta'>" + eta + "</td>" +
                     "<td>" + luogo_nascita + "</td>" +
                     "<td>" + nazione_nascita + "</td>" +
@@ -323,7 +365,10 @@ function mostra_mia_lista() {
                     "<td>" + presentato_da + "</td>" +
                     "<td id = 'sospeso'>" + sospeso + "</td>" +
                     "<td id = 'eta_precisa'>" + eta_precisa + "</td>" +
-                    "<td id = 'scadenza'>" + scadenza + "</td>" +                    
+                    "<td id = 'scadenza'>" + scadenza + "</td>" +
+                    "<td>" + cognome_titolare + "</td>" +
+                    "<td>" + nome_titolare + "</td>" +
+
                     "</tr>";
 
                 if (id != precedente) {

@@ -31,3 +31,9 @@
     display: flex !important;
     align-items: baseline;
 }
+
+#tabella, th, td {
+    font-size:0.8em;
+    border: 1px solid;
+    width:100%;
+}
