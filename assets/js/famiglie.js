@@ -62,6 +62,7 @@ function mostra_mia_lista() {
             nome: excelRows[i][3],
             ruolo: "Titolare",
             data_nascita: excelRows[i][5],
+            //anno_nascita: excelRows[i][5].substr(0, 4),
             eta: excelRows[i][6],
             luogo_nascita: excelRows[i][7],
             nazione_nascita: excelRows[i][8],
@@ -240,15 +241,34 @@ function mostra_mia_lista() {
 
 
     if (mia_lista) {
+        const visualizzaNum = document.querySelector('#num');
+        const visualizzaId = document.querySelector('#id');
+        const visualizzaCf = document.querySelector('#cf');
+        const visualizzaCog = document.querySelector('#cog');
+        //const visualizzaNomCf = document.querySelector('#cf');
+        //const visualizzaRuo = document.querySelector('#cog');
+
+        if (visualizzaNum.checked == false) var intestazioneNum = '<th style="display:none;">Num</th>';
+        else var intestazioneNum = '<th>Num</th>';
+        if (visualizzaId.checked == false) var intestazioneId = '<th style="display:none;">Id</th>';
+        else var intestazioneId = '<th>Id</th>';
+        if (visualizzaCf.checked == false) var intestazioneCf = '<th style="display:none;">Codice Fiscale</th>';
+        else var intestazioneCf = '<th>Codice Fiscale</th>';
+        if (visualizzaCog.checked == false) var intestazioneCog = '<th style="display:none;">Cognome</th>';
+        else var intestazioneCog = '<th>Cognome</th>';
+
+
+
+
         var result = "<table id='tabella' class='display'>" +
             "<thead id = 'riga_intestazione'>" +
             "<tr>" +                               //Change table headings to match witht he Google Sheet
             //"<th>Delete</th>"+
-            "<th>Num</th>" +
-            "<th>Id</th>" +
-            "<th>Codice Fiscale</th>" +
+            intestazioneNum +
+            intestazioneId +
+            intestazioneCf +
             //"<th>i</th>"+                      
-            "<th>Cognome</th>" +
+            intestazioneCog +
             "<th>Nome</th>" +
             "<th>Ruolo</th>" +
             "<th>Data nascita</th>" +
@@ -281,6 +301,11 @@ function mostra_mia_lista() {
         var filtro_tessera_valida = document.querySelector('input[name="radio_tessera_valida"]:checked').value;
         var filtro_comune_selezionato = document.querySelector('input[name="radioFilter"]:checked').value;
         var filtro_anni = document.querySelector('input[name="anniFilter"]:checked').value;
+
+
+
+
+
 
         if (filtro_elimina_sospesi === "si") {
             mia_lista = mia_lista.filter((f) => f.sospeso != 1
@@ -315,9 +340,12 @@ function mostra_mia_lista() {
 
 
 
-
-
-
+        if (filtro_anni == "2004-2016") {
+            if (mia_lista[i].data_nascita !== undefined && mia_lista[i].data_nascita !== "") {
+                mia_lista = mia_lista.filter((f) => f.mia_lista[i].data_nascita.substr(0, 4) >= 2004
+                );
+            }
+        }
 
 
         for (var i = 0; i < mia_lista.length; i++) {
@@ -337,20 +365,11 @@ function mostra_mia_lista() {
 
                 var data_nascita = mia_lista[i].data_nascita;
                 if (data_nascita !== undefined && data_nascita !== "") {
-
-                    console.log(data_nascita.substr(0, 4))
-                    if (filtro_anni == "2004-2016") {
-                        mia_lista = mia_lista.filter((f) => f.data_nascita.substr(0, 4) >= 2004
-                        );
-                    }
-
-
                     var data_nascita_formattata = moment(data_nascita).format("DD/MM/YYYY");
                     //var now = moment();
                     //const dataCorrente = moment(new Date(now));
                     const returnDate = moment(new Date(data_nascita));
                     var eta_precisa = dataCorrente.diff(returnDate, 'years', true).toFixed(1);
-
                     const data_Nascita_Array = data_nascita.split("-");
                     var anno_nascita = data_Nascita_Array[0];
                     //console.log(anno_nascita)
@@ -381,22 +400,27 @@ function mostra_mia_lista() {
                 var nome_titolare = mia_lista[i].nome_titolare;
 
 
-                //
 
 
 
 
 
-
-
+                if (visualizzaNum.checked == false) var rigaNum = "<td style='display:none;' id = 'num'>" + k + "</td>";
+                else var rigaNum = "<td id = 'num'>" + k + "</td>";
+                if (visualizzaId.checked == false) var rigaId = "<td style='display:none;'>" + id + "</td>";
+                else var rigaId = "<td>" + id + "</td>";
+                if (visualizzaCf.checked == false) var rigaCf = "<td style='display:none;'>" + codice_fiscale + "</td>";
+                else var rigaCf = "<td>" + codice_fiscale + "</td>";
+                if (visualizzaCog.checked == false) var rigaCog = "<td style='display:none;'>" + cognome + "</td>";
+                else var rigaCog = "<td>" + cognome + "</td>";
 
 
 
                 result += "<tr id = 'riga'>" +
-                    "<td id = 'num'>" + k + "</td>" +
-                    "<td>" + id + "</td>" +
-                    "<td>" + codice_fiscale + "</td>" +
-                    "<td>" + cognome + "</td>" +
+                    rigaNum +
+                    rigaId +
+                    rigaCf +
+                    rigaCog +
                     "<td>" + nome + "</td>" +
                     "<td>" + ruolo + "</td>" +
                     "<td>" + data_nascita_formattata + "</td>" +
