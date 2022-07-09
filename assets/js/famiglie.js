@@ -276,21 +276,21 @@ function mostra_mia_lista() {
         const dataCorrente = moment(new Date(now));
         var precedente = "";
         for (var i = 0; i < mia_lista.length; i++) {
-            //var query_altro = 'mia_lista[i].codice_fiscale !== "ALTRO" &&';
-            //var query_operasilente = 'mia_lista[i].codice_fiscale !== "OPERASILENTE"';
-            //if (query_altro + query_operasilente) {
+            var query_altro = mia_lista[i].codice_fiscale !== "ALTRO";
+            var query_operasilente = mia_lista[i].codice_fiscale !== "OPERASILENTE";
+            if (query_altro && query_operasilente) {
 
-                if (mia_lista[i].codice_fiscale != "ALTRO" & mia_lista[i].codice_fiscale != "OPERASILENTE") {
+                //if (mia_lista[i].codice_fiscale != "ALTRO" & mia_lista[i].codice_fiscale != "OPERASILENTE") {
 
                     if (filtro_elimina_sospesi === "si") {
                         mia_lista = mia_lista.filter((f) => f.sospeso != 1
                         );
                     }
 
-                    //if (filtro_tessera_valida === "si") {
-                    //    mia_lista = mia_lista.filter((f) => f.scadenza >= dataCorrente
-                    //    );
-                    //}
+                    if (filtro_tessera_valida === "si") {
+                        mia_lista = mia_lista.filter((f) => moment(f.scadenza,"DD/MM/YYYY") >= dataCorrente
+                        );
+                    }
 
 
 
