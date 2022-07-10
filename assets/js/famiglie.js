@@ -235,15 +235,15 @@ function mostra_mia_lista() {
             });
         }
     }
-    
+
     // ===========================================================================================
     if (mia_lista) {
         const visualizzaNum = document.querySelector('#num');
         const visualizzaId = document.querySelector('#id');
         const visualizzaCf = document.querySelector('#cf');
         const visualizzaCog = document.querySelector('#cog');
-        //const visualizzaNomCf = document.querySelector('#cf');
-        //const visualizzaRuo = document.querySelector('#cog');
+        const visualizzaNom = document.querySelector('#nom');
+        const visualizzaRuo = document.querySelector('#ruo');
 
         if (visualizzaNum.checked == false) var intestazioneNum = '<th style="display:none;">Num</th>';
         else var intestazioneNum = '<th>Num</th>';
@@ -253,11 +253,14 @@ function mostra_mia_lista() {
         else var intestazioneCf = '<th>Codice Fiscale</th>';
         if (visualizzaCog.checked == false) var intestazioneCog = '<th style="display:none;">Cognome</th>';
         else var intestazioneCog = '<th>Cognome</th>';
+        if (visualizzaNom.checked == false) var intestazioneNom = '<th style="display:none;">Nome</th>';
+        else var intestazioneNom = '<th>Nome</th>';
+        if (visualizzaRuo.checked == false) var intestazioneRuo = '<th style="display:none;">Ruolo</th>';
+        else var intestazioneRuo = '<th>Ruolo</th>';
 
 
 
-
-        var result = "<table id='tabella' class='display'>" +
+        var result = "<table  id='tabella' class='table table-striped table-responsive{-sm|-md|-lg|-xl}'>" +
             "<thead id = 'riga_intestazione'>" +
             "<tr>" +                               //Change table headings to match witht he Google Sheet
             //"<th>Delete</th>"+
@@ -266,21 +269,23 @@ function mostra_mia_lista() {
             intestazioneCf +
             //"<th>i</th>"+                      
             intestazioneCog +
-            "<th>Nome</th>" +
-            "<th>Ruolo</th>" +
+            intestazioneNom +
+            intestazioneRuo +
             "<th>Data nascita</th>" +
             "<th>Anno nascita</th>" +
             "<th align='center'>Età</th>" +
+            "<th>Età precisa</th>" +            
             "<th>Luogo nascita</th>" +
             "<th>Nazione nascita</th>" +
             "<th>Nazionalità</th>" +
             "<th>Sesso</th>" +
+            "<th>Cognome Titolare</th>" +
+            "<th>Nome Titolare</th>" +            
             "<th>Presentato_da</th>" +
             "<th>Sospeso</th>" +
-            "<th>Età precisa</th>" +
+
             "<th>Scadenza</th>" +
-            "<th>Cognome Titolare</th>" +
-            "<th>Nome Titolare</th>" +
+
 
             "</tr>" +
             "</thead>";
@@ -397,7 +402,10 @@ function mostra_mia_lista() {
             else var rigaCf = "<td>" + codice_fiscale + "</td>";
             if (visualizzaCog.checked == false) var rigaCog = "<td style='display:none;'>" + cognome + "</td>";
             else var rigaCog = "<td>" + cognome + "</td>";
-
+            if (visualizzaNom.checked == false) var rigaNom = "<td style='display:none;'>" + nome + "</td>";
+            else var rigaNom = "<td>" + nome + "</td>";
+            if (visualizzaRuo.checked == false) var rigaRuo = "<td style='display:none;'>" + ruolo + "</td>";
+            else var rigaRuo = "<td>" + ruolo + "</td>";
 
 
             result += "<tr id = 'riga'>" +
@@ -405,21 +413,23 @@ function mostra_mia_lista() {
                 rigaId +
                 rigaCf +
                 rigaCog +
-                "<td>" + nome + "</td>" +
-                "<td>" + ruolo + "</td>" +
+                rigaNom +
+                rigaRuo +
                 "<td>" + data_nascita_formattata + "</td>" +
-                "<td>" + anno_nascita + "</td>" +
+                "<td id = 'anno_nascita'>" + anno_nascita + "</td>" +
                 "<td id = 'eta'>" + eta + "</td>" +
+                "<td id = 'eta_precisa'>" + eta_precisa + "</td>" +                
                 "<td>" + luogo_nascita + "</td>" +
                 "<td>" + nazione_nascita + "</td>" +
                 "<td>" + nazionalita + "</td>" +
                 "<td id = 'sesso'>" + sesso + "</td>" +
+                "<td>" + cognome_titolare + "</td>" +
+                "<td>" + nome_titolare + "</td>" +                
                 "<td>" + presentato_da + "</td>" +
                 "<td id = 'sospeso'>" + sospeso + "</td>" +
-                "<td id = 'eta_precisa'>" + eta_precisa + "</td>" +
+
                 "<td id = 'scadenza'>" + scadenza + "</td>" +
-                "<td>" + cognome_titolare + "</td>" +
-                "<td>" + nome_titolare + "</td>" +
+
 
                 "</tr>";
 
@@ -449,5 +459,37 @@ function mostra_mia_lista() {
         var div = document.getElementById('dataTable');
         div.innerHTML = result;
     }
+    var dvExcel = document.getElementById("dvExcel");
+    dvExcel.innerHTML = "y98y98y98";
+    dvExcel.appendChild(tabella);
+    // crea il bottone per il download in alto a destra
+    var dow = document.getElementById("dow");
+    dow.innerHTML = '<button class="btn btn-primary" id="export" onclick="ExportExcel()">Download</button>';
+}
 
+function ExportExcel() {
+    var excel = [];  
+    // intestazione 
+    excel[0] = ["Ruolo", "CF", "Cognome", "Nome", "Data nascita", "Età"]
+
+    for (var f in mia_lista) {
+        var famiglia = mia_lista[f];
+
+        if (famiglia.genitore_1 != undefined)
+            excel.push(CreaRigaExcelPersona(famiglia.genitore_1, "Genitore 1"))
+        if (famiglia.genitore_2 != undefined)
+            excel.push(CreaRigaExcelPersona(famiglia.genitore_2, "Genitore 2"))
+        for (var f in famiglia.figli)
+            excel.push(CreaRigaExcelPersona(famiglia.figli[f], "Figlio"))
+    }
+
+    const wb = XLSX.utils.book_new();
+    const ds = XLSX.utils.aoa_to_sheet(excel)
+    XLSX.utils.book_append_sheet(wb, ds, "Report")
+    XLSX.writeFile(wb, "Report.xlsx", { bookType: "xlsx" })
+   
+}
+
+function CreaRigaExcelPersona(p, ruolo) {
+    return [ruolo, p.cf, p.cognome, p.nome, p.data_nascita.toLocaleDateString(), p.eta];
 }

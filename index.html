@@ -155,21 +155,13 @@
                     value="2004-2016" id="filter-6">
                 <label class="form-check-label text-nowrap" for="inlineRadio2">2004-2016</label>
             </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="anniFilter" onchange="mostra_mia_lista()"
-                    value="Centro Di Ascolto Caritas Villafranca" id="filter-7">
-                <label class="form-check-label text-nowrap" for="inlineRadio7">Cda</label>
-            </div>
         </div>
 
 
-        <!-- tutto questo per lasciare una riga di spazio-->
-        <div class="row">
-            <div class="input-group mb-3">
-            </div>
-        </div>
 
 
+        <hr />
+        Visualizza colonne &nbsp; &nbsp;
         <div class="form-check form-check-inline"">
             <input class=" form-check-input" type="checkbox" value="" id="num" onchange="mostra_mia_lista()" checked>
             <label class="form-check-label" for="flexCheckDefault">
@@ -213,19 +205,15 @@
 
 
 
-        <!-- tutto questo per lasciare una riga di spazio-->
-        <div class="row">
-            <div class="input-group mb-3">
-            </div>
-        </div>
 
+        <hr />
         <div id="Messaggio_Filtro"></div>
         <div id="Messaggio_Statistiche"></div>
 
 
-        <hr />
+
         <div>
-            <pre id="dataTable"></pre>
+            <div class="table-responsive"></div><div id="dataTable"></div> </div>
         </div>
     </div>
 
@@ -261,6 +249,7 @@
             </div>
         </div>
     </div>
+    <div id="dvExcel"></div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="assets/lib/bootstrap-5.1.3/js/bootstrap.bundle.min.js"></script>
