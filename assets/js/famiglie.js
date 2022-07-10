@@ -1,5 +1,6 @@
 
 var famiglie = []
+var mia_lista = []
 function Upload() {
     //Reference the FileUpload element.
     var fileUpload = document.getElementById("fileUpload");
@@ -53,7 +54,7 @@ function ProcessExcel(data) {
 function mostra_mia_lista() {
     var excelRows = famiglie
 
-    var mia_lista = [];
+    mia_lista = [];
     for (var i = 0; i < excelRows.length; i++) {
         mia_lista.push({
             id: excelRows[i][0],
@@ -237,18 +238,17 @@ function mostra_mia_lista() {
     }
 
     // ===========================================================================================
+        const visualizzaCf = document.querySelector('#cf');
     if (mia_lista) {
         const visualizzaNum = document.querySelector('#num');
         const visualizzaId = document.querySelector('#id');
-        const visualizzaCf = document.querySelector('#cf');
+
         const visualizzaCog = document.querySelector('#cog');
         const visualizzaNom = document.querySelector('#nom');
         const visualizzaRuo = document.querySelector('#ruo');
 
-        if (visualizzaNum.checked == false) var intestazioneNum = '<th style="display:none;">Num</th>';
-        else var intestazioneNum = '<th>Num</th>';
-        if (visualizzaId.checked == false) var intestazioneId = '<th style="display:none;">Id</th>';
-        else var intestazioneId = '<th>Id</th>';
+        if (visualizzaNum.checked == true) var intestazioneNum = '<th>Num</th>'; else var intestazioneNum = '';
+        if (visualizzaId.checked == true) var intestazioneId = '<th>Id</th>'; else var intestazioneId = ""
         if (visualizzaCf.checked == false) var intestazioneCf = '<th style="display:none;">Codice Fiscale</th>';
         else var intestazioneCf = '<th>Codice Fiscale</th>';
         if (visualizzaCog.checked == false) var intestazioneCog = '<th style="display:none;">Cognome</th>';
@@ -274,13 +274,13 @@ function mostra_mia_lista() {
             "<th>Data nascita</th>" +
             "<th>Anno nascita</th>" +
             "<th align='center'>Età</th>" +
-            "<th>Età precisa</th>" +            
+            "<th>Età precisa</th>" +
             "<th>Luogo nascita</th>" +
             "<th>Nazione nascita</th>" +
             "<th>Nazionalità</th>" +
             "<th>Sesso</th>" +
             "<th>Cognome Titolare</th>" +
-            "<th>Nome Titolare</th>" +            
+            "<th>Nome Titolare</th>" +
             "<th>Presentato_da</th>" +
             "<th>Sospeso</th>" +
 
@@ -394,10 +394,8 @@ function mostra_mia_lista() {
 
 
 
-            if (visualizzaNum.checked == false) var rigaNum = "<td style='display:none;' id = 'num'>" + k + "</td>";
-            else var rigaNum = "<td id = 'num'>" + k + "</td>";
-            if (visualizzaId.checked == false) var rigaId = "<td style='display:none;'>" + id + "</td>";
-            else var rigaId = "<td>" + id + "</td>";
+            if (visualizzaNum.checked == true) var rigaNum = "<td id = 'num'>" + k + "</td>"; else var rigaNum = ""
+            if (visualizzaId.checked == true) var rigaId = "<td>" + id + "</td>"; else var rigaId = ""
             if (visualizzaCf.checked == false) var rigaCf = "<td style='display:none;'>" + codice_fiscale + "</td>";
             else var rigaCf = "<td>" + codice_fiscale + "</td>";
             if (visualizzaCog.checked == false) var rigaCog = "<td style='display:none;'>" + cognome + "</td>";
@@ -418,13 +416,13 @@ function mostra_mia_lista() {
                 "<td>" + data_nascita_formattata + "</td>" +
                 "<td id = 'anno_nascita'>" + anno_nascita + "</td>" +
                 "<td id = 'eta'>" + eta + "</td>" +
-                "<td id = 'eta_precisa'>" + eta_precisa + "</td>" +                
+                "<td id = 'eta_precisa'>" + eta_precisa + "</td>" +
                 "<td>" + luogo_nascita + "</td>" +
                 "<td>" + nazione_nascita + "</td>" +
                 "<td>" + nazionalita + "</td>" +
                 "<td id = 'sesso'>" + sesso + "</td>" +
                 "<td>" + cognome_titolare + "</td>" +
-                "<td>" + nome_titolare + "</td>" +                
+                "<td>" + nome_titolare + "</td>" +
                 "<td>" + presentato_da + "</td>" +
                 "<td id = 'sospeso'>" + sospeso + "</td>" +
 
@@ -459,8 +457,10 @@ function mostra_mia_lista() {
         var div = document.getElementById('dataTable');
         div.innerHTML = result;
     }
+    console.log(visualizzaCf.checked)
+
     var dvExcel = document.getElementById("dvExcel");
-    dvExcel.innerHTML = "y98y98y98";
+    dvExcel.innerHTML = "";
     dvExcel.appendChild(tabella);
     // crea il bottone per il download in alto a destra
     var dow = document.getElementById("dow");
@@ -468,26 +468,53 @@ function mostra_mia_lista() {
 }
 
 function ExportExcel() {
-    var excel = [];  
-    // intestazione 
-    excel[0] = ["Ruolo", "CF", "Cognome", "Nome", "Data nascita", "Età"]
+    var excel = [];
 
-    for (var f in mia_lista) {
-        var famiglia = mia_lista[f];
 
-        if (famiglia.genitore_1 != undefined)
-            excel.push(CreaRigaExcelPersona(famiglia.genitore_1, "Genitore 1"))
-        if (famiglia.genitore_2 != undefined)
-            excel.push(CreaRigaExcelPersona(famiglia.genitore_2, "Genitore 2"))
-        for (var f in famiglia.figli)
-            excel.push(CreaRigaExcelPersona(famiglia.figli[f], "Figlio"))
-    }
+    if (mia_lista[0].id != undefined) excel.push("Id");
+    //if (visualizzaCf == true) excel.push("Codice Fiscale");
+    if (mia_lista[0].codice_fiscale != undefined || mia_lista[0].codice_fiscale != "") excel.push("Codice Fiscale");
+    if (mia_lista[0].cognome != undefined) excel.push("Cognome");
+    if (mia_lista[0].nome != undefined) excel.push("Nome");
+    //if(mia_lista[0].cognome != undefined) var cogint = "Cognome";    
+    //excel[0] = [cfint, cogint]
+    console.log(excel)
+    excel = ""
+    /*
+    
+        for (var f in mia_lista) {
+            var famiglia = mia_lista[f];
+            console.log(famiglia.nome)
+    
+        }
+    
+    */
 
-    const wb = XLSX.utils.book_new();
-    const ds = XLSX.utils.aoa_to_sheet(excel)
-    XLSX.utils.book_append_sheet(wb, ds, "Report")
-    XLSX.writeFile(wb, "Report.xlsx", { bookType: "xlsx" })
-   
+
+
+
+
+
+    /*
+        // intestazione 
+        excel[0] = ["Ruolo", "CF", "Cognome", "Nome", "Data nascita", "Età"]
+    
+        for (var f in mia_lista) {
+            var famiglia = mia_lista[f];
+    
+            if (famiglia.genitore_1 != undefined)
+                excel.push(CreaRigaExcelPersona(famiglia.genitore_1, "Genitore 1"))
+            if (famiglia.genitore_2 != undefined)
+                excel.push(CreaRigaExcelPersona(famiglia.genitore_2, "Genitore 2"))
+            for (var f in famiglia.figli)
+                excel.push(CreaRigaExcelPersona(famiglia.figli[f], "Figlio"))
+        }
+    
+        const wb = XLSX.utils.book_new();
+        const ds = XLSX.utils.aoa_to_sheet(excel)
+        XLSX.utils.book_append_sheet(wb, ds, "Report")
+        XLSX.writeFile(wb, "Report.xlsx", { bookType: "xlsx" })
+       */
 }
 
 function CreaRigaExcelPersona(p, ruolo) {
