@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="it">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="assets/lib/bootstrap-5.1.3/css/bootstrap.min.css">
+    <title>Report Famiglie</title>
+    <style>
+        .d-flex {
+            display: flex !important;
+            align-items: baseline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="input-group mb-3">
+                    <label class="col-md-3 lh-lg">Soglia: </label><input type="text" class="form-control"
+                        placeholder="Data" id="soglia" onchange="mostra_famiglie()" value="01/07/2022">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <input class="form-control" type="file" id="fileUpload" onchange="Upload()" accept=".xls,.xlsx">
+            </div>
+<!--
+            <div class="col-md-2">
+                 
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#Modal_istruzioni">
+                    Istruzioni
+                </button>
+            </div>
+-->
+            <div class="col-md-2">
+                <div id="dow"></div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="Modal_istruzioni" tabindex="-1" aria-labelledby="Modal_istruzioni_Label"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="Modal_istruzioni_Label">Istruzioni report vendite</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <font color="blue">1. aprire il gestionale</font><br>
+                            <font color="blue">2. selezionare backend</font><br>
+                            <font color="blue">3. selezionare Clienti --> Elenco clienti</font><br>
+                            <font color="blue">4. cliccare su Esporta lista famiglie</font><br>
+                            <i>--- verrà salvato un file excel sul computer ---</i><br>
+                            <font color="green">5. impostare la soglia scadenza tessera</font><br>
+                            <font color="green">6. cliccare sul tasto grigio "Scegli file" al centro di questa pagina
+                            </font>
+                            <br>
+                            <font color="green">7. selezionare il file precedentemente salvato (punto 4)</font><br>
+                            <i>--- verrà avviata l'elaborazione dei dati e stilato un prospetto ---</i><br>
+                            <font color="green">8. per salvare in un file excel cliccare su Download</font>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <pre id="jsondata"></pre>
+            </div>
+        </div>
+
+
+
+        <div class="d-flex">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radioFilter" value="tutti"
+                    onchange="mostra_famiglie()" id="filter-1" checked>
+                <label class="form-check-label text-nowrap" for="inlineRadio3">Tutti</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radioFilter" value="Comune Di Vigasio"
+                    onchange="mostra_famiglie()" id="filter-2">
+                <label class="form-check-label" for="inlineRadio1">Vigasio</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radioFilter" value="Comune Di Villafranca Di Verona"
+                    onchange="mostra_famiglie()" id="filter-3">
+                <label class="form-check-label text-nowrap" for="inlineRadio2">Villafranca</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radioFilter" value="Comune Di Povegliano Veronese"
+                    onchange="mostra_famiglie()" id="filter-4">
+                <label class="form-check-label text-nowrap" for="inlineRadio2">Povegliano</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radioFilter" onchange="mostra_famiglie()"
+                    value="Comune Di Nogarole Rocca" id="filter-5">
+                <label class="form-check-label text-nowrap" for="inlineRadio2">Nogarole</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radioFilter" onchange="mostra_famiglie()"
+                    value="Comune Di Mozzecane" id="filter-6">
+                <label class="form-check-label text-nowrap" for="inlineRadio2">Mozzecane</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radioFilter" onchange="mostra_famiglie()"
+                    value="Centro Di Ascolto Caritas Villafranca" id="filter-7">
+                <label class="form-check-label text-nowrap" for="inlineRadio7">Cda</label>
+            </div>
+            <!--
+            <div class="input-group mb-3">
+                <button type="button" class="btn btn-primary" onclick="mostra_famiglie()">Applica</button>
+            </div>
+            
+
+
+        </div>
+        <div class="d-flex">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radioFilter_2" value="tutti" onchange="mostra_famiglie()" id="filtro2-1" checked>
+                <label class="form-check-label text-nowrap" for="inlineRadio3">Tutti</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radioFilter_2" value="Comune Di Vigasio" onchange="mostra_famiglie()" id="filtro2-2">
+                <label class="form-check-label" for="inlineRadio1">da 6 a 10</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radioFilter" value="Comune Di Villafranca Di Verona"
+                    onchange="mostra_famiglie()" id="filter-3">
+                <label class="form-check-label text-nowrap" for="inlineRadio2">Villafranca</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radioFilter" value="Comune Di Povegliano Veronese"
+                    onchange="mostra_famiglie()" id="filter-4">
+                <label class="form-check-label text-nowrap" for="inlineRadio2">Povegliano</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radioFilter" onchange="mostra_famiglie()"
+                    value="Comune Di Nogarole Rocca" id="filter-5">
+                <label class="form-check-label text-nowrap" for="inlineRadio2">Nogarole</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radioFilter" onchange="mostra_famiglie()"
+                    value="Comune Di Mozzecane" id="filter-6">
+                <label class="form-check-label text-nowrap" for="inlineRadio2">Mozzecane</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radioFilter" onchange="mostra_famiglie()"
+                    value="Centro Di Ascolto Caritas Villafranca" id="filter-7">
+                <label class="form-check-label text-nowrap" for="inlineRadio7">Cda</label>
+            </div>
+        </div>
+-->
+
+
+
+
+
+    </div>
+
+    <div id="Messaggio_Filtro"></div>
+    <div id="Messaggio_Statistiche"></div>
+
+
+    <hr />
+
+    <div id="dvExcel"></div>
+    <script type="text/javascript" src="assets/lib/bootstrap-5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="assets/lib/xlsx/js/xlsx.full.min.js"></script>
+    <script type="text/javascript" src="assets/lib/xlsx/js/jszip.js"></script>
+    <script type="text/javascript" src="assets/lib/moment-2.29.1/moment.min.js"></script>
+    <script type="text/javascript" src="assets/js/famiglie1.js"></script>
+</body>
+
+</html>

@@ -74,7 +74,8 @@ function mostra_mia_lista() {
             sospeso: excelRows[i][25],
             scadenza: excelRows[i][24],
             cognome_titolare: excelRows[i][2],
-            nome_titolare: excelRows[i][3]
+            nome_titolare: excelRows[i][3],
+            tipo_tessera: excelRows[i][1]            
         });
         if (excelRows[i][35] != undefined && excelRows[i][35] != "") {
             mia_lista.push({
@@ -93,7 +94,8 @@ function mostra_mia_lista() {
                 sospeso: excelRows[i][25],
                 scadenza: excelRows[i][24],
                 cognome_titolare: excelRows[i][2],
-                nome_titolare: excelRows[i][3]
+                nome_titolare: excelRows[i][3],
+                tipo_tessera: excelRows[i][1]  
             });
         }
         if (excelRows[i][45] != undefined && excelRows[i][45] != "") {
@@ -113,7 +115,8 @@ function mostra_mia_lista() {
                 sospeso: excelRows[i][25],
                 scadenza: excelRows[i][24],
                 cognome_titolare: excelRows[i][2],
-                nome_titolare: excelRows[i][3]
+                nome_titolare: excelRows[i][3],
+                tipo_tessera: excelRows[i][1]  
             });
         }
         if (excelRows[i][55] != undefined && excelRows[i][55] != "") {
@@ -133,7 +136,8 @@ function mostra_mia_lista() {
                 sospeso: excelRows[i][25],
                 scadenza: excelRows[i][24],
                 cognome_titolare: excelRows[i][2],
-                nome_titolare: excelRows[i][3]
+                nome_titolare: excelRows[i][3],
+                tipo_tessera: excelRows[i][1]  
             });
         }
         if (excelRows[i][65] != undefined && excelRows[i][65] != "") {
@@ -153,7 +157,8 @@ function mostra_mia_lista() {
                 sospeso: excelRows[i][25],
                 scadenza: excelRows[i][24],
                 cognome_titolare: excelRows[i][2],
-                nome_titolare: excelRows[i][3]
+                nome_titolare: excelRows[i][3],
+                tipo_tessera: excelRows[i][1]  
             });
         }
         if (excelRows[i][75] != undefined && excelRows[i][75] != "") {
@@ -173,7 +178,8 @@ function mostra_mia_lista() {
                 sospeso: excelRows[i][25],
                 scadenza: excelRows[i][24],
                 cognome_titolare: excelRows[i][2],
-                nome_titolare: excelRows[i][3]
+                nome_titolare: excelRows[i][3],
+                tipo_tessera: excelRows[i][1]  
             });
         }
         if (excelRows[i][85] != undefined && excelRows[i][85] != "") {
@@ -193,7 +199,8 @@ function mostra_mia_lista() {
                 sospeso: excelRows[i][25],
                 scadenza: excelRows[i][24],
                 cognome_titolare: excelRows[i][2],
-                nome_titolare: excelRows[i][3]
+                nome_titolare: excelRows[i][3],
+                tipo_tessera: excelRows[i][1]  
             });
         }
         if (excelRows[i][95] != undefined && excelRows[i][95] != "") {
@@ -213,7 +220,8 @@ function mostra_mia_lista() {
                 sospeso: excelRows[i][25],
                 scadenza: excelRows[i][24],
                 cognome_titolare: excelRows[i][2],
-                nome_titolare: excelRows[i][3]
+                nome_titolare: excelRows[i][3],
+                tipo_tessera: excelRows[i][1]  
             });
         }
         if (excelRows[i][105] != undefined && excelRows[i][105] != "") {
@@ -233,7 +241,8 @@ function mostra_mia_lista() {
                 sospeso: excelRows[i][25],
                 scadenza: excelRows[i][24],
                 cognome_titolare: excelRows[i][2],
-                nome_titolare: excelRows[i][3]
+                nome_titolare: excelRows[i][3],
+                tipo_tessera: excelRows[i][1]  
             });
         }
     }
@@ -252,10 +261,9 @@ function mostra_mia_lista() {
         if (visualizzaId.checked == true) { var intestazioneId = '<th>Id</th>'; selezionati.push("selid") } else { var intestazioneId = ""; selezionati.push("") }
         if (visualizzaCf.checked == true) { var intestazioneCf = '<th>Codice Fiscale</th>'; selezionati.push("selcf") } else { var intestazioneCf = ""; selezionati.push("") }
         if (visualizzaCog.checked == true) { var intestazioneCog = '<th>Cognome</th>'; selezionati.push("selcog") } else { var intestazioneCog = ""; selezionati.push("") }
-        if (visualizzaNom.checked == false) var intestazioneNom = '<th style="display:none;">Nome</th>';
-        else var intestazioneNom = '<th>Nome</th>';
-        if (visualizzaRuo.checked == false) var intestazioneRuo = '<th style="display:none;">Ruolo</th>';
-        else var intestazioneRuo = '<th>Ruolo</th>';
+        if (visualizzaNom.checked == true) { var intestazioneNom = '<th>Nome</th>'; selezionati.push("selnom") } else { var intestazioneNom = ""; selezionati.push("") }
+        if (visualizzaRuo.checked == true) { var intestazioneRuo = '<th>Ruolo</th>'; selezionati.push("selruo") } else { var intestazioneRuo = ""; selezionati.push("") }
+
 
 
 
@@ -280,6 +288,7 @@ function mostra_mia_lista() {
             "<th>Sesso</th>" +
             "<th>Cognome Titolare</th>" +
             "<th>Nome Titolare</th>" +
+            "<th>Tipo Tessera</th>" +            
             "<th>Presentato_da</th>" +
             "<th>Sospeso</th>" +
 
@@ -300,16 +309,22 @@ function mostra_mia_lista() {
         var filtro_tessera_valida = document.querySelector('input[name="radio_tessera_valida"]:checked').value;
         var filtro_comune_selezionato = document.querySelector('input[name="radioFilter"]:checked').value;
         var filtro_anni = document.querySelector('input[name="anniFilter"]:checked').value;
-
+        var filtro_sesso = document.querySelector('input[name="sessoFilter"]:checked').value;
+        var filtro_ucraina = document.querySelector('input[name="ucrainaFilter"]:checked').value;
 
         if (filtro_elimina_sospesi === "si") {
+            var messaggio_Sospesi = "<span style='color:red;'>| elimina sospesi </span>";
             mia_lista = mia_lista.filter((f) => f.sospeso != 1
             );
-        }
+        } 
+        else var messaggio_Sospesi = "";
+
         if (filtro_tessera_valida === "si") {
+            var messaggio_Tessera_Valida = "<span style='color:red;'>| elimina tessera scaduta </span>";
             mia_lista = mia_lista.filter((f) => moment(f.scadenza, "YYYY-MM-DD") >= dataCorrente
             );
         }
+        else var messaggio_Tessera_Valida = "";        
 
         if (filtro_comune_selezionato !== "tutti") {
             mia_lista = mia_lista.filter((f) => f.presentato_da == filtro_comune_selezionato
@@ -336,6 +351,32 @@ function mostra_mia_lista() {
             mia_lista = mia_lista.filter((f) => f.data_nascita != undefined && parseInt(f.data_nascita.substr(0, 4)) >= 2004 && f.data_nascita != undefined && parseInt(f.data_nascita.substr(0, 4)) <= 2016
             );
         }
+
+        if (filtro_sesso == "F") {
+            var messaggio_Sesso_Femmine = "<span style='color:red;'>| solo femmine </span>";
+            mia_lista = mia_lista.filter((f) => f.sesso == "F"
+            );
+        } 
+        else var messaggio_Sesso_Femmine = "";
+
+        if (filtro_sesso == "M") {
+            var messaggio_Sesso_Maschi = "<span style='color:red;'>| solo maschi </span>";
+            mia_lista = mia_lista.filter((f) => f.sesso == "M"
+            );
+        } 
+        else var messaggio_Sesso_Maschi = "";
+
+        if (filtro_ucraina == "si") {
+            var messaggio_Ucraina = "<span style='color:red;'>| solo Ucraina </span>";
+            mia_lista = mia_lista.filter((f) => f.tipo_tessera == "Emergenza Ucraina"
+            );
+        } 
+        else var messaggio_Ucraina = "";
+
+
+
+
+
 
         mia_lista = mia_lista.filter((f) => f.codice_fiscale !== "ALTRO" && f.codice_fiscale !== "OPERASILENTE");
 
@@ -386,7 +427,8 @@ function mostra_mia_lista() {
             if (scadenza == undefined) scadenza = "";
             var cognome_titolare = mia_lista[i].cognome_titolare;
             var nome_titolare = mia_lista[i].nome_titolare;
-
+            var tipo_tessera = mia_lista[i].tipo_tessera;
+            if (tipo_tessera == undefined) tipo_tessera = "";
 
 
 
@@ -394,22 +436,21 @@ function mostra_mia_lista() {
 
 
             if (visualizzaNum.checked == true) var rigaNum = "<td id = 'num'>" + k + "</td>"; else var rigaNum = ""
-            if (visualizzaId.checked == true) var rigaId = "<td>" + id + "</td>"; else var rigaId = ""
-            if (visualizzaCf.checked == true) var rigaCf = "<td>" + codice_fiscale + "</td>"; else var rigaCf = ""
-            if (visualizzaCog.checked == true) var rigaCog = "<td>" + cognome + "</td>"; else var rigaCog = ""
-            if (visualizzaNom.checked == false) var rigaNom = "<td style='display:none;'>" + nome + "</td>";
-            else var rigaNom = "<td>" + nome + "</td>";
-            if (visualizzaRuo.checked == false) var rigaRuo = "<td style='display:none;'>" + ruolo + "</td>";
-            else var rigaRuo = "<td>" + ruolo + "</td>";
+            if (visualizzaId.checked == true) var colId = "<td>" + id + "</td>"; else var colId = ""
+            if (visualizzaCf.checked == true) var colCf = "<td>" + codice_fiscale + "</td>"; else var colCf = ""
+            if (visualizzaCog.checked == true) var colCog = "<td>" + cognome + "</td>"; else var colCog = ""
+            if (visualizzaNom.checked == true) var colNom = "<td>" + nome + "</td>"; else var colNom = ""
+            if (visualizzaRuo.checked == true) var colRuo = "<td>" + ruolo + "</td>"; else var colRuo = ""
+
 
 
             result += "<tr id = 'riga'>" +
                 rigaNum +
-                rigaId +
-                rigaCf +
-                rigaCog +
-                rigaNom +
-                rigaRuo +
+                colId +
+                colCf +
+                colCog +
+                colNom +
+                colRuo +
                 "<td>" + data_nascita_formattata + "</td>" +
                 "<td id = 'anno_nascita'>" + anno_nascita + "</td>" +
                 "<td id = 'eta'>" + eta + "</td>" +
@@ -420,6 +461,7 @@ function mostra_mia_lista() {
                 "<td id = 'sesso'>" + sesso + "</td>" +
                 "<td>" + cognome_titolare + "</td>" +
                 "<td>" + nome_titolare + "</td>" +
+                "<td>" + tipo_tessera + "</td>" +                
                 "<td>" + presentato_da + "</td>" +
                 "<td id = 'sospeso'>" + sospeso + "</td>" +
 
@@ -438,10 +480,21 @@ function mostra_mia_lista() {
         console.log(mia_lista);
         console.log(k);
         console.log(z);
+
+
+        let testo_filtro = "Filtri applicati: " +
+         messaggio_Sospesi +
+         messaggio_Tessera_Valida +
+         messaggio_Sesso_Maschi +
+         messaggio_Sesso_Femmine +
+         messaggio_Ucraina
+         ;
+        document.getElementById("Messaggio_Filtro").innerHTML = testo_filtro;
+
+
+
         let testo_statistiche = z + " famiglie " + k + " componenti";
         document.getElementById("Messaggio_Statistiche").innerHTML = testo_statistiche;
-
-
 
 
 
@@ -466,20 +519,39 @@ function mostra_mia_lista() {
 
 function ExportExcel() {
     var excel = [];
+    var righeExcel = []
 
-    if (selezionati[1] == "selid") excel.push("Id");
-    if (selezionati[2] == "selcf") excel.push("Codice Fiscale");
-    if (selezionati[3] == "selcog") excel.push("Cognome");
+    if (selezionati[1] == "selid") righeExcel.push("Id");
+    if (selezionati[2] == "selcf") righeExcel.push("Codice Fiscale");
+    if (selezionati[3] == "selcog") righeExcel.push("Cognome");
+    if (selezionati[4] == "selnom") righeExcel.push("Nome");
+    if (selezionati[5] == "selruo") righeExcel.push("Ruolo");
+
+
+
+
+    excel.push(righeExcel)
 
     for (var f in mia_lista) {
-        if (selezionati[1] == "selid") excel.push(mia_lista[f].id);
-        if (selezionati[2] == "selcf") excel.push(mia_lista[f].codice_fiscale);
-        if (selezionati[3] == "selcog") excel.push(mia_lista[f].cognome);
+        righeExcel = []
+        if (selezionati[1] == "selid") righeExcel.push(mia_lista[f].id);
+        if (selezionati[2] == "selcf") righeExcel.push(mia_lista[f].codice_fiscale);
+        if (selezionati[3] == "selcog") righeExcel.push(mia_lista[f].cognome);
+        if (selezionati[4] == "selnom") righeExcel.push(mia_lista[f].nome);
+        if (selezionati[5] == "selruo") righeExcel.push(mia_lista[f].ruolo);
+
+
+
+        excel.push(righeExcel)
+
     }
 
-    console.log(excel)
+    //console.log(excel)
 
-
+    const wb = XLSX.utils.book_new();
+    const ds = XLSX.utils.aoa_to_sheet(excel)
+    XLSX.utils.book_append_sheet(wb, ds, "Report")
+    XLSX.writeFile(wb, "Report.xlsx", { bookType: "xlsx" })
 
 
 

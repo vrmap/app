@@ -15,7 +15,7 @@
     <br>
     <div class="container-fluid ">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-1">
                 <div class="input-group mb-3">
                 </div>
             </div>
@@ -23,17 +23,28 @@
             <div class="col-md-4">
                 <input class="form-control" type="file" id="fileUpload" onchange="Upload()" accept=".xls,.xlsx">
             </div>
-            <!--
+
+
             <div class="col-md-2">
-                 
+
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#Modal_istruzioni">
                     Istruzioni
                 </button>
             </div>
-            -->
+
             <div class="col-md-2">
                 <div id="dow"></div>
             </div>
+            <div class="col-md-3">
+                <a class="btn btn-secondary" href="index1.html" target="_blank">Versione 1</a>
+                <a class="btn btn-secondary" href="index2.html" target="_blank">Versione 2</a>
+            </div>
+
+
+
+
+
+
         </div>
 
         <!-- tutto questo per lasciare una riga di spazio-->
@@ -157,7 +168,52 @@
             </div>
         </div>
 
+        <!-- tutto questo per lasciare una riga di spazio-->
+        <div class="row">
+            <div class="input-group mb-3">
+            </div>
+        </div>
 
+        <!-- RADIO BUTTON SESSO-->
+        <div class="d-flex">
+            Sesso &nbsp; &nbsp;
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="sessoFilter" value="tutti"
+                    onchange="mostra_mia_lista()" id="filtro_sesso_tutti" checked>
+                <label class="form-check-label text-nowrap" for="filtro_sesso_tutti">Tutti</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="sessoFilter" value="F" onchange="mostra_mia_lista()"
+                    id="filtro_sesso_femmine">
+                <label class="form-check-label" for="filtro_sesso_femmine">Femmine</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="sessoFilter" value="M" onchange="mostra_mia_lista()"
+                    id="filtro_sesso_maschi">
+                <label class="form-check-label" for="filtro_sesso_maschi">Maschi</label>
+            </div>
+        </div>
+
+        <!-- tutto questo per lasciare una riga di spazio-->
+        <div class="row">
+            <div class="input-group mb-3">
+            </div>
+        </div>
+
+        <!-- RADIO BUTTON UCRAINA-->
+        <div class="d-flex">
+            Emergenza Ucraina &nbsp; &nbsp;
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="ucrainaFilter" value="si"
+                    onchange="mostra_mia_lista()" id="filtro_ucraina_si">
+                <label class="form-check-label" for="filtro_ucraina_si">Si</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="ucrainaFilter" value="no"
+                    onchange="mostra_mia_lista()" id="filtro_ucraina_no" checked>
+                <label class="form-check-label" for="filtro_ucraina_no">No</label>
+            </div>
+        </div>
 
 
         <hr />
@@ -213,8 +269,10 @@
 
 
         <div>
-            <div class="table-responsive"></div><div id="dataTable"></div> </div>
+            <div class="table-responsive"></div>
+            <div id="dataTable"></div>
         </div>
+    </div>
     </div>
 
 
@@ -235,11 +293,10 @@
                     <font color="blue">3. selezionare Clienti --> Elenco clienti</font><br>
                     <font color="blue">4. cliccare su Esporta lista famiglie</font><br>
                     <i>--- verrà salvato un file excel sul computer ---</i><br>
-                    <font color="green">5. impostare la soglia scadenza tessera</font><br>
-                    <font color="green">6. cliccare sul tasto grigio "Scegli file" al centro di questa pagina
+                    <font color="green">6. cliccare sul tasto grigio "Scegli file" in alto
                     </font>
                     <br>
-                    <font color="green">7. selezionare il file precedentemente salvato (punto 4)</font><br>
+                    <font color="green">7. nella maschera selezionare il file precedentemente salvato (punto 4)</font><br>
                     <i>--- verrà avviata l'elaborazione dei dati e stilato un prospetto ---</i><br>
                     <font color="green">8. per salvare in un file excel cliccare su Download</font>
                 </div>
