@@ -1,6 +1,7 @@
 
 var famiglie = []
 var mia_lista = []
+var selezionati = []
 function Upload() {
     //Reference the FileUpload element.
     var fileUpload = document.getElementById("fileUpload");
@@ -53,7 +54,7 @@ function ProcessExcel(data) {
 }
 function mostra_mia_lista() {
     var excelRows = famiglie
-
+    selezionati = []
     mia_lista = [];
     for (var i = 0; i < excelRows.length; i++) {
         mia_lista.push({
@@ -238,21 +239,19 @@ function mostra_mia_lista() {
     }
 
     // ===========================================================================================
-        const visualizzaCf = document.querySelector('#cf');
+
     if (mia_lista) {
         const visualizzaNum = document.querySelector('#num');
         const visualizzaId = document.querySelector('#id');
-
+        const visualizzaCf = document.querySelector('#cf');
         const visualizzaCog = document.querySelector('#cog');
         const visualizzaNom = document.querySelector('#nom');
         const visualizzaRuo = document.querySelector('#ruo');
 
-        if (visualizzaNum.checked == true) var intestazioneNum = '<th>Num</th>'; else var intestazioneNum = '';
-        if (visualizzaId.checked == true) var intestazioneId = '<th>Id</th>'; else var intestazioneId = ""
-        if (visualizzaCf.checked == false) var intestazioneCf = '<th style="display:none;">Codice Fiscale</th>';
-        else var intestazioneCf = '<th>Codice Fiscale</th>';
-        if (visualizzaCog.checked == false) var intestazioneCog = '<th style="display:none;">Cognome</th>';
-        else var intestazioneCog = '<th>Cognome</th>';
+        if (visualizzaNum.checked == true) { var intestazioneNum = '<th>Num</th>'; selezionati.push("selnum") } else { var intestazioneNum = ''; selezionati.push("") }
+        if (visualizzaId.checked == true) { var intestazioneId = '<th>Id</th>'; selezionati.push("selid") } else { var intestazioneId = ""; selezionati.push("") }
+        if (visualizzaCf.checked == true) { var intestazioneCf = '<th>Codice Fiscale</th>'; selezionati.push("selcf") } else { var intestazioneCf = ""; selezionati.push("") }
+        if (visualizzaCog.checked == true) { var intestazioneCog = '<th>Cognome</th>'; selezionati.push("selcog") } else { var intestazioneCog = ""; selezionati.push("") }
         if (visualizzaNom.checked == false) var intestazioneNom = '<th style="display:none;">Nome</th>';
         else var intestazioneNom = '<th>Nome</th>';
         if (visualizzaRuo.checked == false) var intestazioneRuo = '<th style="display:none;">Ruolo</th>';
@@ -396,10 +395,8 @@ function mostra_mia_lista() {
 
             if (visualizzaNum.checked == true) var rigaNum = "<td id = 'num'>" + k + "</td>"; else var rigaNum = ""
             if (visualizzaId.checked == true) var rigaId = "<td>" + id + "</td>"; else var rigaId = ""
-            if (visualizzaCf.checked == false) var rigaCf = "<td style='display:none;'>" + codice_fiscale + "</td>";
-            else var rigaCf = "<td>" + codice_fiscale + "</td>";
-            if (visualizzaCog.checked == false) var rigaCog = "<td style='display:none;'>" + cognome + "</td>";
-            else var rigaCog = "<td>" + cognome + "</td>";
+            if (visualizzaCf.checked == true) var rigaCf = "<td>" + codice_fiscale + "</td>"; else var rigaCf = ""
+            if (visualizzaCog.checked == true) var rigaCog = "<td>" + cognome + "</td>"; else var rigaCog = ""
             if (visualizzaNom.checked == false) var rigaNom = "<td style='display:none;'>" + nome + "</td>";
             else var rigaNom = "<td>" + nome + "</td>";
             if (visualizzaRuo.checked == false) var rigaRuo = "<td style='display:none;'>" + ruolo + "</td>";
@@ -457,8 +454,8 @@ function mostra_mia_lista() {
         var div = document.getElementById('dataTable');
         div.innerHTML = result;
     }
-    console.log(visualizzaCf.checked)
 
+    console.log(selezionati)
     var dvExcel = document.getElementById("dvExcel");
     dvExcel.innerHTML = "";
     dvExcel.appendChild(tabella);
@@ -470,25 +467,17 @@ function mostra_mia_lista() {
 function ExportExcel() {
     var excel = [];
 
+    if (selezionati[1] == "selid") excel.push("Id");
+    if (selezionati[2] == "selcf") excel.push("Codice Fiscale");
+    if (selezionati[3] == "selcog") excel.push("Cognome");
 
-    if (mia_lista[0].id != undefined) excel.push("Id");
-    //if (visualizzaCf == true) excel.push("Codice Fiscale");
-    if (mia_lista[0].codice_fiscale != undefined || mia_lista[0].codice_fiscale != "") excel.push("Codice Fiscale");
-    if (mia_lista[0].cognome != undefined) excel.push("Cognome");
-    if (mia_lista[0].nome != undefined) excel.push("Nome");
-    //if(mia_lista[0].cognome != undefined) var cogint = "Cognome";    
-    //excel[0] = [cfint, cogint]
+    for (var f in mia_lista) {
+        if (selezionati[1] == "selid") excel.push(mia_lista[f].id);
+        if (selezionati[2] == "selcf") excel.push(mia_lista[f].codice_fiscale);
+        if (selezionati[3] == "selcog") excel.push(mia_lista[f].cognome);
+    }
+
     console.log(excel)
-    excel = ""
-    /*
-    
-        for (var f in mia_lista) {
-            var famiglia = mia_lista[f];
-            console.log(famiglia.nome)
-    
-        }
-    
-    */
 
 
 
