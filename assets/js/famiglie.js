@@ -488,30 +488,46 @@ function mostra_mia_lista() {
         else var messaggio_Tessera_Valida = "";
 
         if (filtro_comune_selezionato !== "tutti") {
+            var messaggio_Comune_Selezionato = "<span style='color:red;'>| "+ filtro_comune_selezionato +" </span>";
             mia_lista = mia_lista.filter((f) => f.presentato_da == filtro_comune_selezionato
             );
         }
+        else var messaggio_Comune_Selezionato = "";
 
         if (filtro_anni == "0-15") {
+            var messaggio_finoaquindici = "<span style='color:red;'>| "+ filtro_anni +" </span>";
             mia_lista = mia_lista.filter((f) => f.eta <= 15
             );
         }
+        else var messaggio_finoaquindici = "";
+
         if (filtro_anni == "16-64") {
+            var messaggio_sedicisessantaquattro = "<span style='color:red;'>| "+ filtro_anni +" </span>";
             mia_lista = mia_lista.filter((f) => f.eta >= 16 && f.eta < 64
             );
         }
+        else var messaggio_sedicisessantaquattro = "";
+
         if (filtro_anni == ">64") {
+            var messaggio_maggioressantaquattro = "<span style='color:red;'>| "+ filtro_anni +" </span>";
             mia_lista = mia_lista.filter((f) => f.eta >= 64
             );
         }
+        else var messaggio_maggioressantaquattro = "";
+
         if (filtro_anni == "16-17") {
+            var messaggio_sedicidiciassette = "<span style='color:red;'>| "+ filtro_anni +" </span>";
             mia_lista = mia_lista.filter((f) => f.eta == 16 || f.eta == 17
             );
         }
+        else var messaggio_sedicidiciassette = "";
+
         if (filtro_anni == "2004-2016") {
+            var messaggio_duemilaquattroduemilasedici = "<span style='color:red;'>| "+ filtro_anni +" </span>";
             mia_lista = mia_lista.filter((f) => f.data_nascita != undefined && parseInt(f.data_nascita.substr(0, 4)) >= 2004 && f.data_nascita != undefined && parseInt(f.data_nascita.substr(0, 4)) <= 2016
             );
         }
+        else var messaggio_duemilaquattroduemilasedici = "";
 
         if (filtro_sesso == "F") {
             var messaggio_Sesso_Femmine = "<span style='color:red;'>| solo femmine </span>";
@@ -548,12 +564,9 @@ function mostra_mia_lista() {
             var ruolo = mia_lista[i].ruolo;
             if (ruolo == undefined) ruolo = "";
 
-            //var data_nascita = mia_lista[i].data_nascita;
             if (mia_lista[i].data_nascita !== undefined && mia_lista[i].data_nascita !== "") {
                 var data_nascita_tabella = moment(mia_lista[i].data_nascita).format("DD/MM/YYYY");
-                //const returnDate = moment(new Date(mia_lista[i].data_nascita));
                 var eta_precisa_tabella = dataCorrente.diff(moment(new Date(mia_lista[i].data_nascita)), 'years', true).toFixed(1);
-                //const data_Nascita_Array = data_nascita.split("-");
                 var anno_nascita_tabella = mia_lista[i].data_nascita.split("-")[0];
             }
             else {
@@ -631,7 +644,6 @@ function mostra_mia_lista() {
                 precedente = id
                 z++// contafamiglie
             }
-            //}
         }
 
         console.log(mia_lista);
@@ -644,15 +656,17 @@ function mostra_mia_lista() {
             messaggio_Tessera_Valida +
             messaggio_Sesso_Maschi +
             messaggio_Sesso_Femmine +
-            messaggio_Ucraina
+            messaggio_Ucraina +
+            messaggio_Comune_Selezionato +
+            messaggio_finoaquindici +
+            messaggio_sedicisessantaquattro +
+            messaggio_maggioressantaquattro +
+            messaggio_sedicidiciassette +
+            messaggio_duemilaquattroduemilasedici
             ;
         document.getElementById("Messaggio_Filtro").innerHTML = testo_filtro;
-
-
-
         let testo_statistiche = z + " famiglie " + k + " componenti";
         document.getElementById("Messaggio_Statistiche").innerHTML = testo_statistiche;
-
         result += "</table>";
         var div = document.getElementById('dataTable');
         div.innerHTML = result;
