@@ -59,6 +59,7 @@ function mostra_mia_lista() {
     selezionati = []
     mia_lista = [];
     for (var i = 0; i < excelRows.length; i++) {
+        console.log(excelRows[i][0])
         if (excelRows[i][0] != undefined && excelRows[i][0] != "") {
 
             if (excelRows[i][5] !== undefined && excelRows[i][5] !== "") {
@@ -93,24 +94,14 @@ function mostra_mia_lista() {
                 data_nascita_formattata: data_nascita_formattata,
                 anno_nascita: anno_nascita,
                 eta_precisa: eta_precisa
-
-
-
-
             });
         }
-
-
-
-
-
 
         if (excelRows[i][35] != undefined && excelRows[i][35] != "") {
             if (excelRows[i][39] !== undefined && excelRows[i][39] !== "") {
                 var data_nascita_formattata = moment(excelRows[i][39]).format("DD/MM/YYYY");
                 var anno_nascita = excelRows[i][39].split("-")[0];
                 var eta_precisa = dataCorrente.diff(moment(new Date(excelRows[i][39])), 'years', true).toFixed(1);
-
             }
             else {
                 var data_nascita_formattata = "";
@@ -145,7 +136,6 @@ function mostra_mia_lista() {
                 var data_nascita_formattata = moment(excelRows[i][49]).format("DD/MM/YYYY");
                 var anno_nascita = excelRows[i][49].split("-")[0];
                 var eta_precisa = dataCorrente.diff(moment(new Date(excelRows[i][49])), 'years', true).toFixed(1);
-
             }
             else {
                 var data_nascita_formattata = "";
@@ -180,7 +170,6 @@ function mostra_mia_lista() {
                 var data_nascita_formattata = moment(excelRows[i][59]).format("DD/MM/YYYY");
                 var anno_nascita = excelRows[i][59].split("-")[0];
                 var eta_precisa = dataCorrente.diff(moment(new Date(excelRows[i][59])), 'years', true).toFixed(1);
-
             }
             else {
                 var data_nascita_formattata = "";
@@ -215,7 +204,6 @@ function mostra_mia_lista() {
                 var data_nascita_formattata = moment(excelRows[i][69]).format("DD/MM/YYYY");
                 var anno_nascita = excelRows[i][69].split("-")[0];
                 var eta_precisa = dataCorrente.diff(moment(new Date(excelRows[i][69])), 'years', true).toFixed(1);
-
             }
             else {
                 var data_nascita_formattata = "";
@@ -250,7 +238,6 @@ function mostra_mia_lista() {
                 var data_nascita_formattata = moment(excelRows[i][79]).format("DD/MM/YYYY");
                 var anno_nascita = excelRows[i][79].split("-")[0];
                 var eta_precisa = dataCorrente.diff(moment(new Date(excelRows[i][79])), 'years', true).toFixed(1);
-
             }
             else {
                 var data_nascita_formattata = "";
@@ -285,7 +272,6 @@ function mostra_mia_lista() {
                 var data_nascita_formattata = moment(excelRows[i][89]).format("DD/MM/YYYY");
                 var anno_nascita = excelRows[i][89].split("-")[0];
                 var eta_precisa = dataCorrente.diff(moment(new Date(excelRows[i][89])), 'years', true).toFixed(1);
-
             }
             else {
                 var data_nascita_formattata = "";
@@ -320,7 +306,6 @@ function mostra_mia_lista() {
                 var data_nascita_formattata = moment(excelRows[i][99]).format("DD/MM/YYYY");
                 var anno_nascita = excelRows[i][99].split("-")[0];
                 var eta_precisa = dataCorrente.diff(moment(new Date(excelRows[i][99])), 'years', true).toFixed(1);
-
             }
             else {
                 var data_nascita_formattata = "";
@@ -355,7 +340,6 @@ function mostra_mia_lista() {
                 var data_nascita_formattata = moment(excelRows[i][109]).format("DD/MM/YYYY");
                 var anno_nascita = excelRows[i][109].split("-")[0];
                 var eta_precisa = dataCorrente.diff(moment(new Date(excelRows[i][109])), 'years', true).toFixed(1);
-
             }
             else {
                 var data_nascita_formattata = "";
@@ -388,7 +372,6 @@ function mostra_mia_lista() {
     }
 
     // ===========================================================================================
-
     if (mia_lista) {
         const visualizzaNum = document.querySelector('#num');
         const visualizzaId = document.querySelector('#id');
@@ -488,42 +471,42 @@ function mostra_mia_lista() {
         else var messaggio_Tessera_Valida = "";
 
         if (filtro_comune_selezionato !== "tutti") {
-            var messaggio_Comune_Selezionato = "<span style='color:red;'>| "+ filtro_comune_selezionato +" </span>";
+            var messaggio_Comune_Selezionato = "<span style='color:red;'>| " + filtro_comune_selezionato + " </span>";
             mia_lista = mia_lista.filter((f) => f.presentato_da == filtro_comune_selezionato
             );
         }
         else var messaggio_Comune_Selezionato = "";
 
-        if (filtro_anni == "0-15") {
-            var messaggio_finoaquindici = "<span style='color:red;'>| "+ filtro_anni +" </span>";
-            mia_lista = mia_lista.filter((f) => f.eta <= 15
+        if (filtro_anni == "0-16") {
+            var messaggio_finoaquindici = "<span style='color:red;'>| " + filtro_anni + " </span>";
+            mia_lista = mia_lista.filter((f) => f.eta < 16
             );
         }
         else var messaggio_finoaquindici = "";
 
         if (filtro_anni == "16-64") {
-            var messaggio_sedicisessantaquattro = "<span style='color:red;'>| "+ filtro_anni +" </span>";
+            var messaggio_sedicisessantaquattro = "<span style='color:red;'>| " + filtro_anni + " </span>";
             mia_lista = mia_lista.filter((f) => f.eta >= 16 && f.eta < 64
             );
         }
         else var messaggio_sedicisessantaquattro = "";
 
         if (filtro_anni == ">64") {
-            var messaggio_maggioressantaquattro = "<span style='color:red;'>| "+ filtro_anni +" </span>";
+            var messaggio_maggioressantaquattro = "<span style='color:red;'>| " + filtro_anni + " </span>";
             mia_lista = mia_lista.filter((f) => f.eta >= 64
             );
         }
         else var messaggio_maggioressantaquattro = "";
 
         if (filtro_anni == "16-17") {
-            var messaggio_sedicidiciassette = "<span style='color:red;'>| "+ filtro_anni +" </span>";
+            var messaggio_sedicidiciassette = "<span style='color:red;'>| " + filtro_anni + " </span>";
             mia_lista = mia_lista.filter((f) => f.eta == 16 || f.eta == 17
             );
         }
         else var messaggio_sedicidiciassette = "";
 
         if (filtro_anni == "2004-2016") {
-            var messaggio_duemilaquattroduemilasedici = "<span style='color:red;'>| "+ filtro_anni +" </span>";
+            var messaggio_duemilaquattroduemilasedici = "<span style='color:red;'>| " + filtro_anni + " </span>";
             mia_lista = mia_lista.filter((f) => f.data_nascita != undefined && parseInt(f.data_nascita.substr(0, 4)) >= 2004 && f.data_nascita != undefined && parseInt(f.data_nascita.substr(0, 4)) <= 2016
             );
         }
