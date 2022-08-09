@@ -9,11 +9,15 @@ function visualizzaScontrini() {
     var scrematura = []
     for (var i = 0; i < righe.length; i++) {
         var campi = righe[i].split("\t")
-        scrematura.push({
-            data: campi[1],
-            cognom: campi[2],
-            cf: campi[3]
-        });
+        if (campi[3] != "ALTRO" && campi[3] != "OPERASILENTE") {
+            scrematura.push({
+                data: campi[1],
+                cognom: campi[2],
+                cf: campi[3],
+                numArticoli: campi[4],
+                puntiSpesi: campi[5]
+            });
+        }
     }
 
     //console.log(scrematura)
@@ -26,6 +30,8 @@ function visualizzaScontrini() {
                 data: data,
                 cognom: scrematura[i].cognom,
                 cf: scrematura[i].cf,
+                numArticoli: scrematura[i].numArticoli,
+                puntiSpesi: scrematura[i].puntiSpesi
             });
         }
     }
@@ -40,28 +46,36 @@ function visualizzaScontrini() {
     }, {});
     //console.log(listafamigliePerData);
 
-
     for (var i in listafamigliePerData) {
         var x = {};
+        var puntiGiorno = 0
+        var articoliGiorno = 0
         for (var z = 0; z < listafamigliePerData[i].length; z++) {
             const giorno = listafamigliePerData[i][z].data.substr(0, 2);
             const mese = listafamigliePerData[i][z].data.substr(3, 2) - 1;
             const anno = listafamigliePerData[i][z].data.substr(6, 4);
             const date = new Date(anno, mese, giorno);
             var giornoSett = new Intl.DateTimeFormat('it-IT', { weekday: 'long' }).format(date)
+            var punti = parseInt(listafamigliePerData[i][z].puntiSpesi)
+            var articoli = parseInt(listafamigliePerData[i][z].numArticoli)
+            puntiGiorno = puntiGiorno + punti
+            articoliGiorno = articoliGiorno + articoli
+            x.dataFormattata = moment(date).format('YYYY-MM-DD');
             x.data = listafamigliePerData[i][z].data
             x.giornoSett = giornoSett
             x.nfam = parseInt(z) + 1
+            x.aGiorno = articoliGiorno
+            x.pGiorno = puntiGiorno
         }
         finale.push(x)
     }
 
-    for (var i = 0; i < finale.length; i++) {
-        var data = finale[i].data
-        var elem = finale[i].nfam
-        intestanumerfam.push(data)
-        numerfam.push(elem)
-    }
+    // ordina per date crescenti
+    finale.sort((a, b) => {
+        return new Date(a.dataFormattata) - new Date(b.dataFormattata);
+    })
+
+    //console.log(finale);
 
     var result = "<table  id='tabella' class='table table-striped table-responsive{-sm|-md|-lg|-xl}'>" +
         "<thead id = 'riga_intestazione'>" +
@@ -69,7 +83,8 @@ function visualizzaScontrini() {
         "<th>Data</th>" +
         "<th>Giorno sett.</th>" +
         "<th>N_Fam</th>" +
-        "</tr>" +
+        "<th>Articoli</th>" +
+        "<th>Punti</th>" +
         "</thead>";
 
     for (var i = 0; i < finale.length; i++) {
@@ -77,6 +92,8 @@ function visualizzaScontrini() {
             "<td>" + finale[i].data + "</td>" +
             "<td>" + finale[i].giornoSett + "</td>" +
             "<td>" + finale[i].nfam + "</td>" +
+            "<td>" + finale[i].aGiorno + "</td>" +
+            "<td>" + finale[i].pGiorno + "</td>" +
             "</tr></tbody>";
     }
 
@@ -91,7 +108,9 @@ function ExportExcel() {
 
     righeExcel.push("Data");
     righeExcel.push("Giorno sett.");
-    righeExcel.push("N_Fam..");
+    righeExcel.push("N_Fam");
+    righeExcel.push("Articoli");
+    righeExcel.push("Punti");
     excel.push(righeExcel)
 
     for (var f in finale) {
@@ -99,7 +118,8 @@ function ExportExcel() {
         righeExcel.push(finale[f].data);
         righeExcel.push(finale[f].giornoSett);
         righeExcel.push(finale[f].nfam);
-
+        righeExcel.push(finale[f].aGiorno);
+        righeExcel.push(finale[f].pGiorno);
         excel.push(righeExcel)
     }
 
@@ -107,18 +127,23 @@ function ExportExcel() {
     const ds = XLSX.utils.aoa_to_sheet(excel)
     XLSX.utils.book_append_sheet(wb, ds, "Report")
     XLSX.writeFile(wb, "Report.xlsx", { bookType: "xlsx" })
-
-
-
-
-
-
 }
 
-
-function visualizzaGrafico() {
-    const ctx = document.getElementById('myChart').getContext('2d');
-    const myChart = new Chart(ctx, {
+var myChartFamiglie
+$('#modChartFamiglie').on('shown.bs.modal', function (event) {
+    var intestanumerfam =[]
+    var numerfam=[]
+    for (var i = 0; i < finale.length; i++) {
+        var data = finale[i].data
+        var elem = finale[i].nfam
+        intestanumerfam.push(data)
+        numerfam.push(elem)
+    }
+    var modal = $(this);
+    var canvas = modal.find('.modal-body canvas');
+    canvas.innerHTML = ""
+    var ctx = canvas[0].getContext("2d");
+    myChartFamiglie = new Chart(ctx, {
         type: 'line',
         data: {
             labels: intestanumerfam,
@@ -126,30 +151,24 @@ function visualizzaGrafico() {
                 label: '# Famiglie',
                 data: numerfam,
                 trendlineLinear: {
-                    style: "#3e95cd",
-                    lineStyle: "line",
-                    width: 1
+                    style: "#FF0000",
+                    lineStyle: "dotted|solid",
+                    width: 1,
+                    projection: false
                 },
                 backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
+
+                    'rgba(54, 162, 235, 0.2)'
                 ],
                 borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
+
+                    'rgba(54, 162, 235, 1)'
                 ],
                 borderWidth: 1
             }]
         },
         options: {
+            responsive: true,
             scales: {
                 y: {
                     beginAtZero: true
@@ -157,5 +176,126 @@ function visualizzaGrafico() {
             }
         }
     });
+}).on('hidden.bs.modal', function (event) {
+    myChartFamiglie.destroy()
+    // reset canvas size
+    var modal = $(this);
+    var canvas = modal.find('.modal-body canvas');
+    canvas.attr('width', '568px').attr('height', '300px');
+    // destroy modal
+    $(this).data('bs.modal', null);
+});
 
-}
+var myChartProdotti
+$('#modChartProdotti').on('shown.bs.modal', function (event) {
+    var intestanumerfam =[]
+    var numerfam=[]
+    for (var i = 0; i < finale.length; i++) {
+        var data = finale[i].data
+        var elem = finale[i].aGiorno
+        intestanumerfam.push(data)
+        numerfam.push(elem)
+    }
+    var modal = $(this);
+    var canvas = modal.find('.modal-body canvas');
+    canvas.innerHTML = ""
+    var ctx = canvas[0].getContext("2d");
+    myChartProdotti = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: intestanumerfam,
+            datasets: [{
+                label: '# Prodotti',
+                data: numerfam,
+                trendlineLinear: {
+                    style: "#FF0000",
+                    lineStyle: "dotted|solid",
+                    width: 1,
+                    projection: false
+                },
+                backgroundColor: [
+
+                    'rgba(54, 162, 235, 0.2)'
+                ],
+                borderColor: [
+
+                    'rgba(54, 162, 235, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}).on('hidden.bs.modal', function (event) {
+    myChartProdotti.destroy()
+    // reset canvas size
+    var modal = $(this);
+    var canvas = modal.find('.modal-body canvas');
+    canvas.attr('width', '568px').attr('height', '300px');
+    // destroy modal
+    $(this).data('bs.modal', null);
+});
+
+var myChartPunti
+$('#modChartPunti').on('shown.bs.modal', function (event) {
+    var intestanumerfam =[]
+    var numerfam=[]
+    for (var i = 0; i < finale.length; i++) {
+        var data = finale[i].data
+        var elem = finale[i].pGiorno
+        intestanumerfam.push(data)
+        numerfam.push(elem)
+    }
+    var modal = $(this);
+    var canvas = modal.find('.modal-body canvas');
+    canvas.innerHTML = ""
+    var ctx = canvas[0].getContext("2d");
+    myChartPunti = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: intestanumerfam,
+            datasets: [{
+                label: '# Punti',
+                data: numerfam,
+                trendlineLinear: {
+                    style: "#FF0000",
+                    lineStyle: "dotted|solid",
+                    width: 1,
+                    projection: false
+                },
+                backgroundColor: [
+
+                    'rgba(54, 162, 235, 0.2)'
+                ],
+                borderColor: [
+
+                    'rgba(54, 162, 235, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}).on('hidden.bs.modal', function (event) {
+    myChartPunti.destroy()
+    // reset canvas size
+    var modal = $(this);
+    var canvas = modal.find('.modal-body canvas');
+    canvas.attr('width', '568px').attr('height', '300px');
+    // destroy modal
+    $(this).data('bs.modal', null);
+});
