@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="assets/lib/bootstrap-5.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <title>Report Famiglie</title>
 
@@ -12,22 +13,22 @@
 
 <body>
     <br>
+
     <div class="container ">
         <div class="row">
 
             <div class="input-group mb-3">
-                <textarea id="scontrini" oninput="visualizzaScontrini('scontrini')"></textarea>
+                <textarea id="scontrini" placeholder="Scontrini" oninput="visualizzaScontrini('scontrini')"></textarea>
             </div>
-<!--
-            <div class="input-group mb-3">
-                <button type="button" class="btn btn-primary"
-                    onclick="visualizzaGrafico()">Primary</button>
-            </div>
--->
+            <a href="#" data-bs-toggle="modal" data-bs-target="#modChartFamiglie">Grafico delle famiglie</a>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#modChartProdotti">Grafico dei prodotti</a>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#modChartPunti">Grafico dei punti</a>
+            <br><br>
             <div class="input-group mb-3">
                 <button class="btn btn-primary" id="export" onclick="ExportExcel()">Download</button>
             </div>
         </div>
+
 
 
         <div>
@@ -35,28 +36,65 @@
             <div id="dataTable"></div>
         </div>
 
-
-
-
+        <!-- Modal del grafico Famiglie-->
+        <div class="modal fade" id="modChartFamiglie" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-xl modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="exampleModalLabel">Grafico Famiglie</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <canvas id="canvas" width="568" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal del grafico Prodotti-->
+        <div class="modal fade" id="modChartProdotti" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-xl modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="exampleModalLabel">Grafico Prodotti</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <canvas id="canvas" width="568" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal del grafico Punti-->
+        <div class="modal fade" id="modChartPunti" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-xl modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="exampleModalLabel">Grafico Punti</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <canvas id="canvas" width="568" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-
-
-
-<!--
-    <div class="chart-container" style="position: relative; height:20vh; width:100vw">
-        <canvas id="myChart"></canvas>
-    </div>
-
--->
-
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="assets/lib/bootstrap-5.1.3/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="assets/lib/xlsx/js/xlsx.full.min.js"></script>
     <script type="text/javascript" src="assets/lib/xlsx/js/jszip.js"></script>
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="assets/lib/moment-2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
+    <script type="text/javascript" src="assets/lib/chart.js/chartjs-plugin-trendline.js"></script>    
     <script type="text/javascript" src="assets/js/scontrini.js"></script>
+
 </body>
 
 </html>
