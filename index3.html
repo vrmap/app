@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="it">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="assets/lib/bootstrap-5.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <title>Report Famiglie</title>
+
+</head>
+
+<body>
+    <br>
+    <div class="container-fluid ">
+        <div class="row">
+            <div class="col-md-1">
+                <div class="input-group mb-3">
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <input class="form-control" type="file" id="fileUpload" onchange="Upload()" accept=".xls,.xlsx">
+            </div>
+
+
+
+
+            <div class="col-md-2">
+                <div id="dow"></div>
+            </div>
+
+
+
+
+
+
+
+        </div>
+
+        <!-- tutto questo per lasciare una riga di spazio-->
+        <div class="row">
+            <div class="input-group mb-3">
+            </div>
+        </div>
+
+        <div class="d-flex">
+            Elimina sospesi &nbsp; &nbsp;
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radio_sospesi" value="si"
+                    onchange="mostra_mia_lista()" id="filtro_sospesi_1" checked>
+                <label class="form-check-label text-nowrap" for="filtro_sospesi_1">Si</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radio_sospesi" value="no"
+                    onchange="mostra_mia_lista()" id="filtro_sospesi_2">
+                <label class="form-check-label" for="filtro_sospesi_2">No</label>
+            </div>
+            Tessera valida &nbsp; &nbsp;
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radio_tessera_valida" value="si"
+                    onchange="mostra_mia_lista()" id="filtro_tessera_valida_1" checked>
+                <label class="form-check-label text-nowrap" for="filtro_tessera_valida_1">Si</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radio_tessera_valida" value="no"
+                    onchange="mostra_mia_lista()" id="filtro_tessera_valida_2">
+                <label class="form-check-label" for="filtro_tessera_valida_2">No</label>
+            </div>
+        </div>
+
+
+
+        <!-- tutto questo per lasciare una riga di spazio-->
+        <div class="row">
+            <div class="input-group mb-3">
+            </div>
+        </div>
+
+
+        <!-- RADIO BUTTON COMUNI-->
+        <div class="d-flex">
+            Presentato da &nbsp; &nbsp;
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radioFilter" value="tutti"
+                    onchange="mostra_mia_lista()" id="filter-1" checked>
+                <label class="form-check-label text-nowrap" for="inlineRadio3">Tutti</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radioFilter" value="Comune Di Vigasio"
+                    onchange="mostra_mia_lista()" id="filter-2">
+                <label class="form-check-label" for="inlineRadio1">Vigasio</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radioFilter" value="Comune Di Villafranca Di Verona"
+                    onchange="mostra_mia_lista()" id="filter-3">
+                <label class="form-check-label text-nowrap" for="inlineRadio2">Villafranca</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radioFilter" value="Comune Di Povegliano Veronese"
+                    onchange="mostra_mia_lista()" id="filter-4">
+                <label class="form-check-label text-nowrap" for="inlineRadio2">Povegliano</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radioFilter" onchange="mostra_mia_lista()"
+                    value="Comune Di Nogarole Rocca" id="filter-5">
+                <label class="form-check-label text-nowrap" for="inlineRadio2">Nogarole</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radioFilter" onchange="mostra_mia_lista()"
+                    value="Comune Di Mozzecane" id="filter-6">
+                <label class="form-check-label text-nowrap" for="inlineRadio2">Mozzecane</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="radioFilter" onchange="mostra_mia_lista()"
+                    value="Centro Di Ascolto Caritas Villafranca" id="filter-7">
+                <label class="form-check-label text-nowrap" for="inlineRadio7">Cda</label>
+            </div>
+        </div>
+
+        <!-- tutto questo per lasciare una riga di spazio-->
+        <div class="row">
+            <div class="input-group mb-3">
+            </div>
+        </div>
+
+        <!-- RADIO BUTTON ANNI-->
+        <div class="d-flex">
+            Anni &nbsp; &nbsp;
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="anniFilter" value="tutti"
+                    onchange="mostra_mia_lista()" id="filter-1" checked>
+                <label class="form-check-label text-nowrap" for="inlineRadio3">Tutti</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="anniFilter" value="0-16"
+                    onchange="mostra_mia_lista()" id="filter-2">
+                <label class="form-check-label" for="inlineRadio1">0_16</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="anniFilter" value="16-64"
+                    onchange="mostra_mia_lista()" id="filter-3">
+                <label class="form-check-label text-nowrap" for="inlineRadio2">16-64</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="anniFilter" value=">64" onchange="mostra_mia_lista()"
+                    id="filter-4">
+                <label class="form-check-label text-nowrap" for="inlineRadio2">>64</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="anniFilter" onchange="mostra_mia_lista()"
+                    value="16-17" id="filter-5">
+                <label class="form-check-label text-nowrap" for="inlineRadio2">16-17</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="anniFilter" onchange="mostra_mia_lista()"
+                    value="2004-2016" id="filter-6">
+                <label class="form-check-label text-nowrap" for="inlineRadio2">2004-2016</label>
+            </div>
+        </div>
+
+        <!-- tutto questo per lasciare una riga di spazio-->
+        <div class="row">
+            <div class="input-group mb-3">
+            </div>
+        </div>
+
+        <!-- RADIO BUTTON SESSO-->
+        <div class="d-flex">
+            Sesso &nbsp; &nbsp;
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="sessoFilter" value="tutti"
+                    onchange="mostra_mia_lista()" id="filtro_sesso_tutti" checked>
+                <label class="form-check-label text-nowrap" for="filtro_sesso_tutti">Tutti</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="sessoFilter" value="F" onchange="mostra_mia_lista()"
+                    id="filtro_sesso_femmine">
+                <label class="form-check-label" for="filtro_sesso_femmine">Femmine</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="sessoFilter" value="M" onchange="mostra_mia_lista()"
+                    id="filtro_sesso_maschi">
+                <label class="form-check-label" for="filtro_sesso_maschi">Maschi</label>
+            </div>
+        </div>
+
+        <!-- tutto questo per lasciare una riga di spazio-->
+        <div class="row">
+            <div class="input-group mb-3">
+            </div>
+        </div>
+
+        <!-- RADIO BUTTON UCRAINA-->
+        <div class="d-flex">
+            Emergenza Ucraina &nbsp; &nbsp;
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="ucrainaFilter" value="si"
+                    onchange="mostra_mia_lista()" id="filtro_ucraina_si">
+                <label class="form-check-label" for="filtro_ucraina_si">Si</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="ucrainaFilter" value="no"
+                    onchange="mostra_mia_lista()" id="filtro_ucraina_no" checked>
+                <label class="form-check-label" for="filtro_ucraina_no">No</label>
+            </div>
+        </div>
+
+
+        <hr />
+        Visualizza colonne: &nbsp; &nbsp;
+        <div class="form-check form-check-inline"">
+            <input class=" form-check-input" type="checkbox" value="" id="num" onchange="mostra_mia_lista()" checked>
+            <label class="form-check-label" for="flexCheckDefault">
+                Num
+            </label>
+        </div>
+        <div class="form-check form-check-inline"">
+            <input class=" form-check-input" type="checkbox" value="" id="id" onchange="mostra_mia_lista()">
+            <label class="form-check-label" for="flexCheckChecked">
+                Id
+            </label>
+        </div>
+        <div class="form-check form-check-inline"">              
+            <input class=" form-check-input" type="checkbox" value="" id="cf" onchange="mostra_mia_lista()" checked>
+            <label class="form-check-label" for="flexCheckDefault">
+                Codice Fiscale
+            </label>
+        </div>
+        <div class="form-check form-check-inline"">
+            <input class=" form-check-input" type="checkbox" value="" id="cog" onchange="mostra_mia_lista()" checked>
+            <label class="form-check-label" for="flexCheckChecked">
+                Cognome
+            </label>
+        </div>
+        <div class="form-check form-check-inline"">              
+            <input class=" form-check-input" type="checkbox" value="" id="nom" onchange="mostra_mia_lista()" checked>
+            <label class="form-check-label" for="nom">
+                Nome
+            </label>
+        </div>
+        <div class="form-check form-check-inline"">
+            <input class=" form-check-input" type="checkbox" value="" id="ruo" onchange="mostra_mia_lista()">
+            <label class="form-check-label" for="ruo">
+                Ruolo
+            </label>
+        </div>
+        <div class="form-check form-check-inline"">              
+                <input class=" form-check-input" type="checkbox" value="" id="data_nasc" onchange="mostra_mia_lista()"
+            checked>
+            <label class="form-check-label" for="data_nasc">
+                Data nasc.
+            </label>
+        </div>
+        <div class="form-check form-check-inline"">
+                <input class=" form-check-input" type="checkbox" value="" id="anno_nasc" onchange="mostra_mia_lista()">
+            <label class="form-check-label" for="anno_nasc">
+                Anno nasc.
+            </label>
+        </div>
+        <div class="form-check form-check-inline"">              
+            <input class=" form-check-input" type="checkbox" value="" id="eta" onchange="mostra_mia_lista()" >
+            <label class="form-check-label" for="eta">
+                Età
+            </label>
+        </div>
+        <div class="form-check form-check-inline"">
+            <input class=" form-check-input" type="checkbox" value="" id="eta_prec" onchange="mostra_mia_lista()">
+            <label class="form-check-label" for="eta_prec">
+                Età precisa
+            </label>
+        </div>
+        <div class="form-check form-check-inline"">              
+            <input class=" form-check-input" type="checkbox" value="" id="luo_nasc" onchange="mostra_mia_lista()" >
+            <label class="form-check-label" for="luo_nasc">
+                Luogo nasc.
+            </label>
+        </div>
+        <div class="form-check form-check-inline"">
+            <input class=" form-check-input" type="checkbox" value="" id="naz_nasc" onchange="mostra_mia_lista()">
+            <label class="form-check-label" for="naz_nasc">
+                Nazione nasc.
+            </label>
+        </div>
+        <div class="form-check form-check-inline"">              
+            <input class=" form-check-input" type="checkbox" value="" id="naz" onchange="mostra_mia_lista()" >
+            <label class="form-check-label" for="naz">
+                Nazionalità
+            </label>
+        </div>
+        <div class="form-check form-check-inline"">
+            <input class=" form-check-input" type="checkbox" value="" id="sesso" onchange="mostra_mia_lista()">
+            <label class="form-check-label" for="sesso">
+                Sesso
+            </label>
+        </div>
+        <div class="form-check form-check-inline"">              
+            <input class=" form-check-input" type="checkbox" value="" id="cog_tit" onchange="mostra_mia_lista()" >
+            <label class="form-check-label" for="cog_tit">
+                Cognome titolare
+            </label>
+        </div>
+        <div class="form-check form-check-inline"">
+            <input class=" form-check-input" type="checkbox" value="" id="nom_tit" onchange="mostra_mia_lista()">
+            <label class="form-check-label" for="nom_tit">
+                Nome titolare
+            </label>
+        </div>
+        <div class="form-check form-check-inline"">              
+            <input class=" form-check-input" type="checkbox" value="" id="tip_tess" onchange="mostra_mia_lista()" >
+            <label class="form-check-label" for="tip_tess">
+                Tipo Tessera
+            </label>
+        </div>
+        <div class="form-check form-check-inline"">
+            <input class=" form-check-input" type="checkbox" value="" id="pr_da" onchange="mostra_mia_lista()">
+            <label class="form-check-label" for="pr_da">
+                Presentato da
+            </label>
+        </div>
+        <div class="form-check form-check-inline"">              
+            <input class=" form-check-input" type="checkbox" value="" id="sos" onchange="mostra_mia_lista()" >
+            <label class="form-check-label" for="sos">
+                Sospeso
+            </label>
+        </div>
+        <div class="form-check form-check-inline"">
+            <input class=" form-check-input" type="checkbox" value="" id="scad" onchange="mostra_mia_lista()">
+            <label class="form-check-label" for="scad">
+                Scadenza
+            </label>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+    <hr />
+    <div id="Messaggio_Filtro"></div>
+    <div id="Messaggio_Statistiche"></div>
+
+
+
+    <div>
+        <div class="table-responsive"></div>
+        <div id="dataTable"></div>
+    </div>
+    </div>
+    </div>
+
+    <div id="dvExcel"></div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="assets/lib/bootstrap-5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="assets/lib/xlsx/js/xlsx.full.min.js"></script>
+    <script type="text/javascript" src="assets/lib/xlsx/js/jszip.js"></script>
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="assets/lib/moment-2.29.1/moment.min.js"></script>
+    <script type="text/javascript" src="assets/js/famiglie3.js"></script>
+</body>
+
+</html>
