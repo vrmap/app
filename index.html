@@ -8,7 +8,6 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <title>Report Famiglie</title>
-
 </head>
 
 <body>
@@ -24,9 +23,6 @@
                 <input class="form-control" type="file" id="fileUpload" onchange="Upload()" accept=".xls,.xlsx">
             </div>
 
-
-
-
             <div class="col-md-2">
                 <div id="dow"></div>
             </div>
@@ -35,11 +31,6 @@
                 <a class="btn btn-secondary" href="index2.html" target="_blank">V_2</a>
                 <a class="btn btn-secondary" href="index3.html" target="_blank">V_3</a>                
             </div>
-
-
-
-
-
 
         </div>
 
@@ -73,8 +64,6 @@
                 <label class="form-check-label" for="filtro_tessera_valida_2">No</label>
             </div>
         </div>
-
-
 
         <!-- tutto questo per lasciare una riga di spazio-->
         <div class="row">
@@ -162,6 +151,23 @@
                     value="2004-2016" id="filter-6">
                 <label class="form-check-label text-nowrap" for="inlineRadio2">2004-2016</label>
             </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="anniFilter" onchange="mostra_mia_lista()"
+                    value="range_anni" id="filter-7">
+                <label class="form-check-label text-nowrap" for="inlineRadio2">Range anni</label>
+            </div>
+                <select class="form-select" id="filter-7a" name="filter-7a" onchange="mostra_mia_lista()" aria-label="Default select example">
+                    <option selected>Seleziona l'anno d'inizio</option>
+                    <option value="2000">2000</option>
+                    <option value="2001">2001</option>
+                    <option value="2002">2002</option>
+                </select>
+            <select class="form-select" id="filter-7b" name="filter-7b" onchange="mostra_mia_lista()" aria-label="Default select example">
+                <option selected>Seleziona l'anno di fine</option>
+                <option value="2000">2000</option>
+                <option value="2001">2001</option>
+                <option value="2002">2002</option>
+            </select>
         </div>
 
         <!-- tutto questo per lasciare una riga di spazio-->
@@ -210,7 +216,6 @@
                 <label class="form-check-label" for="filtro_ucraina_no">No</label>
             </div>
         </div>
-
 
         <hr />
         Visualizza colonne: &nbsp; &nbsp;
@@ -335,42 +340,36 @@
                 Scadenza
             </label>
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
     </div>
-
-
-
-
-
-
-
-
     <hr />
     <div id="Messaggio_Filtro"></div>
     <div id="Messaggio_Statistiche"></div>
-
-
-
     <div>
         <div class="table-responsive"></div>
         <div id="dataTable"></div>
     </div>
     </div>
     </div>
-
     <div id="dvExcel"></div>
+
+    <div id="avviso" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Avviso</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Modal body text goes here.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="assets/lib/bootstrap-5.1.3/js/bootstrap.bundle.min.js"></script>
