@@ -536,6 +536,7 @@ function mostra_mia_lista() {
             var messaggio_rangeanni = "<span style='color:red;'>| " + filtro_anni + " </span>";
             var filtro_range_dal = document.getElementById("filter-7a").value;
             var filtro_range_al = document.getElementById("filter-7b").value;
+            var messaggio_rangeanni = "<span style='color:red;'>| dal " + filtro_range_dal + " al " + filtro_range_al + " </span>";
             mia_lista = mia_lista.filter((f) => f.data_nascita != undefined && parseInt(f.data_nascita.substr(0, 4)) >= filtro_range_dal && f.data_nascita != undefined && parseInt(f.data_nascita.substr(0, 4)) <= filtro_range_al);
         }
         else var messaggio_rangeanni = "";
@@ -673,7 +674,8 @@ function mostra_mia_lista() {
             messaggio_sedicisessantaquattro +
             messaggio_maggioressantaquattro +
             messaggio_sedicidiciassette +
-            messaggio_duemilaquattroduemilasedici
+            messaggio_duemilaquattroduemilasedici +
+            messaggio_rangeanni
             ;
         document.getElementById("Messaggio_Filtro").innerHTML = testo_filtro;
         let testo_statistiche = z + " famiglie " + k + " componenti";
