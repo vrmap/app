@@ -1,4 +1,7 @@
+$(document).ready(function () {
+    if ($('#filter-1').is(':checked')) { $("#filter-7a").hide(); $("#filter-7b").hide(); }
 
+});
 var famiglie = []
 var mia_lista = []
 var selezionati = []
@@ -476,8 +479,15 @@ function mostra_mia_lista() {
             );
         }
         else var messaggio_Comune_Selezionato = "";
+        
+        if (filtro_anni == "tutti") {
+            $("#filter-7a").hide();
+            $("#filter-7b").hide();
+        }
 
         if (filtro_anni == "0-16") {
+            $("#filter-7a").hide();
+            $("#filter-7b").hide();
             var messaggio_finoaquindici = "<span style='color:red;'>| " + filtro_anni + " </span>";
             mia_lista = mia_lista.filter((f) => f.eta < 16
             );
@@ -485,6 +495,8 @@ function mostra_mia_lista() {
         else var messaggio_finoaquindici = "";
 
         if (filtro_anni == "16-64") {
+            $("#filter-7a").hide();
+            $("#filter-7b").hide();
             var messaggio_sedicisessantaquattro = "<span style='color:red;'>| " + filtro_anni + " </span>";
             mia_lista = mia_lista.filter((f) => f.eta >= 16 && f.eta < 64
             );
@@ -492,6 +504,8 @@ function mostra_mia_lista() {
         else var messaggio_sedicisessantaquattro = "";
 
         if (filtro_anni == ">64") {
+            $("#filter-7a").hide();
+            $("#filter-7b").hide();
             var messaggio_maggioressantaquattro = "<span style='color:red;'>| " + filtro_anni + " </span>";
             mia_lista = mia_lista.filter((f) => f.eta >= 64
             );
@@ -499,6 +513,8 @@ function mostra_mia_lista() {
         else var messaggio_maggioressantaquattro = "";
 
         if (filtro_anni == "16-17") {
+            $("#filter-7a").hide();
+            $("#filter-7b").hide();
             var messaggio_sedicidiciassette = "<span style='color:red;'>| " + filtro_anni + " </span>";
             mia_lista = mia_lista.filter((f) => f.eta == 16 || f.eta == 17
             );
@@ -506,11 +522,23 @@ function mostra_mia_lista() {
         else var messaggio_sedicidiciassette = "";
 
         if (filtro_anni == "2004-2016") {
+            $("#filter-7a").hide();
+            $("#filter-7b").hide();
             var messaggio_duemilaquattroduemilasedici = "<span style='color:red;'>| " + filtro_anni + " </span>";
             mia_lista = mia_lista.filter((f) => f.data_nascita != undefined && parseInt(f.data_nascita.substr(0, 4)) >= 2004 && f.data_nascita != undefined && parseInt(f.data_nascita.substr(0, 4)) <= 2016
             );
         }
         else var messaggio_duemilaquattroduemilasedici = "";
+        
+        if (filtro_anni == "range_anni") {
+            $("#filter-7a").show();
+            $("#filter-7b").show();
+            var messaggio_rangeanni = "<span style='color:red;'>| " + filtro_anni + " </span>";
+            var filtro_range_dal = document.getElementById("filter-7a").value;
+            var filtro_range_al = document.getElementById("filter-7b").value;
+            mia_lista = mia_lista.filter((f) => f.data_nascita != undefined && parseInt(f.data_nascita.substr(0, 4)) >= filtro_range_dal && f.data_nascita != undefined && parseInt(f.data_nascita.substr(0, 4)) <= filtro_range_al);
+        }
+        else var messaggio_rangeanni = "";
 
         if (filtro_sesso == "F") {
             var messaggio_Sesso_Femmine = "<span style='color:red;'>| solo femmine </span>";
