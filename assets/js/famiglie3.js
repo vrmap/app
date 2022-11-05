@@ -1,3 +1,7 @@
+$(document).ready(function () {
+    if ($('#filter-1').is(':checked')) { $("#filter-7a").hide(); $("#filter-7b").hide(); }
+
+});
 
 var famiglie = []
 var mia_lista = []
@@ -486,8 +490,15 @@ function mostra_mia_lista() {
             );
         }
         else var messaggio_Comune_Selezionato = "";
+        
+        if (filtro_anni == "tutti") {
+            $("#filter-7a").hide();
+            $("#filter-7b").hide();
+        }
 
         if (filtro_anni == "0-16") {
+            $("#filter-7a").hide();
+            $("#filter-7b").hide();
             var messaggio_finoaquindici = "<span style='color:red;'>| " + filtro_anni + " </span>";
             mia_lista = mia_lista.filter((f) => f.eta < 16
             );
@@ -495,6 +506,8 @@ function mostra_mia_lista() {
         else var messaggio_finoaquindici = "";
 
         if (filtro_anni == "16-64") {
+            $("#filter-7a").hide();
+            $("#filter-7b").hide();
             var messaggio_sedicisessantaquattro = "<span style='color:red;'>| " + filtro_anni + " </span>";
             mia_lista = mia_lista.filter((f) => f.eta >= 16 && f.eta < 64
             );
@@ -502,6 +515,8 @@ function mostra_mia_lista() {
         else var messaggio_sedicisessantaquattro = "";
 
         if (filtro_anni == ">64") {
+            $("#filter-7a").hide();
+            $("#filter-7b").hide();
             var messaggio_maggioressantaquattro = "<span style='color:red;'>| " + filtro_anni + " </span>";
             mia_lista = mia_lista.filter((f) => f.eta >= 64
             );
@@ -509,6 +524,8 @@ function mostra_mia_lista() {
         else var messaggio_maggioressantaquattro = "";
 
         if (filtro_anni == "16-17") {
+            $("#filter-7a").hide();
+            $("#filter-7b").hide();
             var messaggio_sedicidiciassette = "<span style='color:red;'>| " + filtro_anni + " </span>";
             mia_lista = mia_lista.filter((f) => f.eta == 16 || f.eta == 17
             );
@@ -516,11 +533,23 @@ function mostra_mia_lista() {
         else var messaggio_sedicidiciassette = "";
 
         if (filtro_anni == "2004-2016") {
+            $("#filter-7a").hide();
+            $("#filter-7b").hide();
             var messaggio_duemilaquattroduemilasedici = "<span style='color:red;'>| " + filtro_anni + " </span>";
             mia_lista = mia_lista.filter((f) => f.data_nascita != undefined && parseInt(f.data_nascita.substr(0, 4)) >= 2004 && f.data_nascita != undefined && parseInt(f.data_nascita.substr(0, 4)) <= 2016
             );
         }
         else var messaggio_duemilaquattroduemilasedici = "";
+        
+        if (filtro_anni == "range_anni") {
+            $("#filter-7a").show();
+            $("#filter-7b").show();
+            var filtro_range_dal = document.getElementById("filter-7a").value;
+            var filtro_range_al = document.getElementById("filter-7b").value;
+            var messaggio_rangeanni = "<span style='color:red;'>| dal " + filtro_range_dal + " al " + filtro_range_al + " </span>";
+            mia_lista = mia_lista.filter((f) => f.data_nascita != undefined && parseInt(f.data_nascita.substr(0, 4)) >= filtro_range_dal && f.data_nascita != undefined && parseInt(f.data_nascita.substr(0, 4)) <= filtro_range_al);
+        }
+        else var messaggio_rangeanni = "";
 
         if (filtro_sesso == "F") {
             var messaggio_Sesso_Femmine = "<span style='color:red;'>| solo femmine </span>";
@@ -594,8 +623,6 @@ function mostra_mia_lista() {
             if (tipo_tessera == undefined) tipo_tessera = "";
             var componenti = mia_lista[i].componenti;
 
-
-
             if (codice_fiscale == "PLSCMN72S53Z129U")disabili=1;
             if (codice_fiscale == "NKMKWS82B16Z318F")disabili=1;
             if (codice_fiscale == "NNTNAA54H50Z129T")disabili=1;
@@ -620,8 +647,6 @@ function mostra_mia_lista() {
             if (codice_fiscale == "CDGPLA55A20L949R")disabili=1;
             if (codice_fiscale == "ZRZNGL83A45L949R")disabili=1;
 
-
-
             var contafamiglie = z + 1;
             var rigaintesta = "<tr><td colspan='5' align='center'>Famiglia nr. <b>" +
                 contafamiglie +
@@ -632,7 +657,6 @@ function mostra_mia_lista() {
                 "</b><br>Componenti: <b>" +
                 componenti +
                 "</b><br>Disabili: <b>" + disabili + "</b>" +                
-                
                 "</td></tr>" +
                 "<tr>" +
                 "<td><i>Num.</i></td>" +
@@ -640,14 +664,8 @@ function mostra_mia_lista() {
                 "<td><i>Cognome</i></td>" +
                 "<td><i>Nome</i></td>" +
                 "<td><i>Data Nascita</i></td>" +
-
-
-
                 "</tr>"
                 ;
-
-
-
 
             if (visualizzaNum.checked == true) var rigaNum = "<td id = 'num'>" + k + "</td>"; else var rigaNum = ""
             if (visualizzaId.checked == true) var colId = "<td>" + id + "</td>"; else var colId = ""
@@ -669,8 +687,6 @@ function mostra_mia_lista() {
             if (visualizzaPresentatoDa.checked == true) var coPrDa = "<td id = 'sesso'>" + presentato_da + "</td>"; else var coPrDa = ""
             if (visualizzaSospeso.checked == true) var colSos = "<td id = 'sospeso'>" + sospeso + "</td>"; else var colSos = ""
             if (visualizzaScadenza.checked == true) var colScad = "<td id = 'scadenza'>" + scadenza + "</td>"; else var colScad = ""
-
-
 
             // Se il codice fiscale corrisponde con quello del titolare nucleo familiare non crea la riga del titolare nucleo familiare
 
@@ -733,7 +749,8 @@ function mostra_mia_lista() {
             messaggio_sedicisessantaquattro +
             messaggio_maggioressantaquattro +
             messaggio_sedicidiciassette +
-            messaggio_duemilaquattroduemilasedici
+            messaggio_duemilaquattroduemilasedici +
+            messaggio_rangeanni
             ;
         document.getElementById("Messaggio_Filtro").innerHTML = testo_filtro;
         let testo_statistiche = z + " famiglie " + k + " componenti";
@@ -751,12 +768,6 @@ function mostra_mia_lista() {
     var dow = document.getElementById("dow");
     dow.innerHTML = '<button class="btn btn-primary" id="export" onclick="ExportExcel()">Download</button>';
 }
-
-
-
-
-
-
 
 function ExportExcel() {
     var excel = [];
