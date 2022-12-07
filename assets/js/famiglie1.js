@@ -96,9 +96,10 @@ function mostra_famiglie(){
             Famiglie_dopo_scadenza = famiglie.filter((f) => f.scadenza >= filtro_data &&
                                      f.sospeso != 1 &&
                                      f.codice_fiscale != "ALTRO" &&
+                                     f.codice_fiscale != "CARITAS" &&                                                     
                                      f.codice_fiscale != "OPERASILENTE"                                                                        
                                      );
-            let testo_messaggio = "Filtri applicati: Scadenza tessera, non considera sospesi, ALTRO e OPERA SILENTE";
+            let testo_messaggio = "Filtri applicati: Scadenza tessera, non considera sospesi, ALTRO, CARITAS e OPERA SILENTE";
             document.getElementById("Messaggio_Filtro").innerHTML = testo_messaggio;
 
 
@@ -108,10 +109,11 @@ function mostra_famiglie(){
             Famiglie_dopo_scadenza = famiglie.filter((f) => f.scadenza >= filtro_data && 
                                         f.sospeso != 1 && 
                                         f.codice_fiscale != "ALTRO" &&
+                                        f.codice_fiscale != "CARITAS" &&
                                         f.codice_fiscale != "OPERASILENTE" &&
                                         f.presentato_da === comune_selezionato
                                         ); // filtro in base a data di scadenza e sospeso
-            let testo_messaggio = "Filtri applicati: Scadenza tessera, Presentato da, non considera sospesi, ALTRO e OPERA SILENTE";
+            let testo_messaggio = "Filtri applicati: Scadenza tessera, Presentato da, non considera sospesi, ALTRO, CARITAS e OPERA SILENTE";
             document.getElementById("Messaggio_Filtro").innerHTML = testo_messaggio;       
             
         
