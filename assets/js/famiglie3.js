@@ -572,16 +572,12 @@ function mostra_mia_lista() {
         }
         else var messaggio_Ucraina = "";
 
-        mia_lista = mia_lista.filter((f) => f.codice_fiscale !== "ALTRO" && f.codice_fiscale !== "OPERASILENTE");
+        mia_lista = mia_lista.filter((f) => f.codice_fiscale !== "ALTRO" && f.codice_fiscale !== "OPERASILENTE" && f.codice_fiscale !== "CARITAS");
         
         
         var disabili = 0;        
         var rigaNumComp = 1;
         for (var i = 0; i < mia_lista.length; i++) {
-
-            //var query_altro = mia_lista[i].codice_fiscale !== "ALTRO";
-            //var query_operasilente = mia_lista[i].codice_fiscale !== "OPERASILENTE";
-            //if (query_altro && query_operasilente) {
             var k = parseInt(i) + 1; // contatore colonna Num della tabella
             var id = mia_lista[i].id;
             var codice_fiscale = mia_lista[i].codice_fiscale;
