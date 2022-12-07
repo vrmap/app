@@ -541,7 +541,7 @@ function mostra_mia_lista() {
         }
         else var messaggio_Ucraina = "";
 
-        mia_lista = mia_lista.filter((f) => f.codice_fiscale !== "ALTRO" && f.codice_fiscale !== "OPERASILENTE");
+        mia_lista = mia_lista.filter((f) => f.codice_fiscale !== "ALTRO" && f.codice_fiscale !== "OPERASILENTE" && f.codice_fiscale !== "CARITAS");
         //====== Fine dei filtri =======================================================================================        
 
         var k = 0; // contatore colonna Num della tabella
