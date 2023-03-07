@@ -382,6 +382,116 @@ function mostra_mia_lista() {
                 componenti: excelRows[i][18]
             });
         }
+        // INIZIO AGGIUNTA
+        if (excelRows[i][115] != undefined && excelRows[i][115] != "") {
+            if (excelRows[i][119] !== undefined && excelRows[i][119] !== "") {
+                var data_nascita_formattata = moment(excelRows[i][119]).format("DD/MM/YYYY");
+                var anno_nascita = excelRows[i][119].split("-")[0];
+                var eta_precisa = dataCorrente.diff(moment(new Date(excelRows[i][119])), 'years', true).toFixed(1);
+            }
+            else {
+                var data_nascita_formattata = "";
+                var anno_nascita = "";
+                var eta_precisa = "";
+            }
+            mia_lista.push({
+                id: excelRows[i][0],
+                codice_fiscale: excelRows[i][115],
+                cognome: excelRows[i][116],
+                nome: excelRows[i][117],
+                ruolo: excelRows[i][118],
+                data_nascita: excelRows[i][119],
+                eta: excelRows[i][120],
+                luogo_nascita: excelRows[i][121],
+                nazione_nascita: excelRows[i][122],
+                nazionalita: excelRows[i][123],
+                sesso: excelRows[i][124],
+                telefono1: excelRows[i][15],
+                telefono2: excelRows[i][16],
+                presentato_da: excelRows[i][23],
+                sospeso: excelRows[i][25],
+                scadenza: excelRows[i][24],
+                cognome_titolare: excelRows[i][2],
+                nome_titolare: excelRows[i][3],
+                tipo_tessera: excelRows[i][1],
+                data_nascita_formattata: data_nascita_formattata,
+                anno_nascita: anno_nascita,
+                eta_precisa: eta_precisa
+            });
+        }
+        if (excelRows[i][125] != undefined && excelRows[i][125] != "") {
+            if (excelRows[i][129] !== undefined && excelRows[i][129] !== "") {
+                var data_nascita_formattata = moment(excelRows[i][129]).format("DD/MM/YYYY");
+                var anno_nascita = excelRows[i][129].split("-")[0];
+                var eta_precisa = dataCorrente.diff(moment(new Date(excelRows[i][129])), 'years', true).toFixed(1);
+            }
+            else {
+                var data_nascita_formattata = "";
+                var anno_nascita = "";
+                var eta_precisa = "";
+            }
+            mia_lista.push({
+                id: excelRows[i][0],
+                codice_fiscale: excelRows[i][125],
+                cognome: excelRows[i][126],
+                nome: excelRows[i][127],
+                ruolo: excelRows[i][128],
+                data_nascita: excelRows[i][129],
+                eta: excelRows[i][130],
+                luogo_nascita: excelRows[i][131],
+                nazione_nascita: excelRows[i][132],
+                nazionalita: excelRows[i][133],
+                sesso: excelRows[i][134],
+                telefono1: excelRows[i][15],
+                telefono2: excelRows[i][16],
+                presentato_da: excelRows[i][23],
+                sospeso: excelRows[i][25],
+                scadenza: excelRows[i][24],
+                cognome_titolare: excelRows[i][2],
+                nome_titolare: excelRows[i][3],
+                tipo_tessera: excelRows[i][1],
+                data_nascita_formattata: data_nascita_formattata,
+                anno_nascita: anno_nascita,
+                eta_precisa: eta_precisa
+            });
+        }
+        if (excelRows[i][135] != undefined && excelRows[i][135] != "") {
+            if (excelRows[i][139] !== undefined && excelRows[i][139] !== "") {
+                var data_nascita_formattata = moment(excelRows[i][139]).format("DD/MM/YYYY");
+                var anno_nascita = excelRows[i][139].split("-")[0];
+                var eta_precisa = dataCorrente.diff(moment(new Date(excelRows[i][139])), 'years', true).toFixed(1);
+            }
+            else {
+                var data_nascita_formattata = "";
+                var anno_nascita = "";
+                var eta_precisa = "";
+            }
+            mia_lista.push({
+                id: excelRows[i][0],
+                codice_fiscale: excelRows[i][135],
+                cognome: excelRows[i][136],
+                nome: excelRows[i][137],
+                ruolo: excelRows[i][138],
+                data_nascita: excelRows[i][139],
+                eta: excelRows[i][140],
+                luogo_nascita: excelRows[i][141],
+                nazione_nascita: excelRows[i][142],
+                nazionalita: excelRows[i][143],
+                sesso: excelRows[i][144],
+                telefono1: excelRows[i][15],
+                telefono2: excelRows[i][16],
+                presentato_da: excelRows[i][23],
+                sospeso: excelRows[i][25],
+                scadenza: excelRows[i][24],
+                cognome_titolare: excelRows[i][2],
+                nome_titolare: excelRows[i][3],
+                tipo_tessera: excelRows[i][1],
+                data_nascita_formattata: data_nascita_formattata,
+                anno_nascita: anno_nascita,
+                eta_precisa: eta_precisa
+            });
+        }
+        // FINE AGGIUNTA    
     }
     console.log(mia_lista) // la lista contiene tutti i record
     // ===========================================================================================
