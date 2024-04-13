@@ -57,12 +57,24 @@ function Upload() {
 function CreaListaFamiglie(data) {
     for (let i in data) {
         let riga = data[i];
-        famiglie.push(CreaFamigia(riga));
+        famiglie.push(CreaFamiglia(riga));
     }
-    //console.log(famiglie)
 }
 
-function CreaFamigia(dati) {
+function CreaFamiglia(dati) {
+    if (dati[23] == "Comune Di Villafranca Di Verona") {var comune = "Villafranca"}
+    else {var comune = dati[23]}
+    if (dati[23] == "Comune Di Villafranca Di Verona") {var comune = "Nogarole"}
+    else {var comune = dati[23]}
+    if (dati[23] == "Comune Di Villafranca Di Verona") {var comune = "Povegliano"}
+    else {var comune = dati[23]}
+    if (dati[23] == "Comune Di Villafranca Di Verona") {var comune = "Mozzecane"}
+    else {var comune = dati[23]}
+    if (dati[23] == "Comune Di Villafranca Di Verona") {var comune = "Vigasio"}
+    else {var comune = dati[23]}
+    if (dati[23] == "Centro Di Ascolto Caritas Villafranca") {var comune = "Centro di Ascolto"}
+    else {var comune = dati[23]}
+    
     let famiglia = {
         codiceFiscale: dati[0],
         tipoTessera: dati[1],
@@ -87,7 +99,7 @@ function CreaFamigia(dati) {
         punti_residui: dati[20],
         esenzione: dati[21],
         iscritto_da: dati[22],
-        presentato_da: dati[23],
+        presentato_da: comune,
         scadenza: dati[24],
         sospeso: dati[25],
         sospeso_da: dati[26],
