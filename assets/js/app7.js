@@ -64,13 +64,13 @@ function CreaListaFamiglie(data) {
 function CreaFamiglia(dati) {
     if (dati[23] == "Comune Di Villafranca Di Verona") {var comune = "Villafranca"}
     else {var comune = dati[23]}
-    if (dati[23] == "Comune Di Villafranca Di Verona") {var comune = "Nogarole"}
+    if (dati[23] == "Comune Di Nogarole Rocca") {var comune = "Nogarole"}
     else {var comune = dati[23]}
-    if (dati[23] == "Comune Di Villafranca Di Verona") {var comune = "Povegliano"}
+    if (dati[23] == "Comune Di Povegliano Veronese") {var comune = "Povegliano"}
     else {var comune = dati[23]}
-    if (dati[23] == "Comune Di Villafranca Di Verona") {var comune = "Mozzecane"}
+    if (dati[23] == "Comune Di Mozzecane") {var comune = "Mozzecane"}
     else {var comune = dati[23]}
-    if (dati[23] == "Comune Di Villafranca Di Verona") {var comune = "Vigasio"}
+    if (dati[23] == "Comune Di Vigasio") {var comune = "Vigasio"}
     else {var comune = dati[23]}
     if (dati[23] == "Centro Di Ascolto Caritas Villafranca") {var comune = "Centro di Ascolto"}
     else {var comune = dati[23]}
