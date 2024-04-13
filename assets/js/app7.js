@@ -282,6 +282,8 @@ function filtraFamigliePerRangeAnni(famiglie, data_Inizio, data_Fine) {
         const membri = famiglie[i].membri;
         const famigliaFiltrata = [];
         let titolare = null;
+        const comune = famiglie[i].presentato_da;
+        const telefono = parseInt(famiglie[i].cellulare);
 
         for (let j = 0; j < membri.length; j++) {
             const membro = membri[j];
@@ -302,7 +304,7 @@ function filtraFamigliePerRangeAnni(famiglie, data_Inizio, data_Fine) {
                 famigliaFiltrata.push(membri[0]);
             }
             //famiglieFiltratePerRangeAnni.push({ famiglia: famiglie[i], membri: famigliaFiltrata });
-            famiglieFiltratePerRangeAnni.push({ membri: famigliaFiltrata });
+            famiglieFiltratePerRangeAnni.push({ comune: comune, telefono: telefono, membri: famigliaFiltrata });
         }
     }
 
@@ -384,6 +386,8 @@ function mostraTabellaHTML() {
         "<th>" + "Sesso" + "</th>" +
         "<th>" + "Data nascita" + "</th>" +
         "<th>" + "Età" + "</th>" +
+        "<th>" + "Comune" + "</th>" +
+        "<th>" + "Telefono" + "</th>" +       
         "</tr>" +
         "</thead>" +
         "<tbody>";
@@ -400,6 +404,8 @@ function mostraTabellaHTML() {
             var sessoComponente = famiglieFiltratePerRangeAnni[i].membri[k].Sesso
             var dataNascitaComponente = moment(famiglieFiltratePerRangeAnni[i].membri[k].Data_nascita).format("DD/MM/YYYY")
             var etaComponente = famiglieFiltratePerRangeAnni[i].membri[k].Eta
+            var comuneProponente = famiglieFiltratePerRangeAnni[i].comune 
+            var telefonoFamiglia = parseInt(famiglieFiltratePerRangeAnni[i].telefono);  
 
             if (k === 1) {
                 result += "<tr>" +
@@ -409,6 +415,8 @@ function mostraTabellaHTML() {
                     "<td style='text-align:center'>" + sessoComponente + "</td>" +
                     "<td style='text-align:center'>" + dataNascitaComponente + "</td>" +
                     "<td style='text-align:center'>" + etaComponente + "</td>" +
+                    "<td style='text-align:center'>" + comuneProponente + "</td>" +
+                    "<td style='text-align:center'>" + telefonoFamiglia + "</td>" +   
                     "</tr>";
                 z++
             }
@@ -420,6 +428,8 @@ function mostraTabellaHTML() {
                     "<td style='text-align:center'>" + sessoComponente + "</td>" +
                     "<td style='text-align:center'>" + dataNascitaComponente + "</td>" +
                     "<td style='text-align:center'>" + etaComponente + "</td>" +
+                    "<td style='text-align:center'>" + comuneProponente + "</td>" +
+                    "<td style='text-align:center'>" + telefonoFamiglia + "</td>" +   
                     "</tr>";
                 z++
             }
@@ -446,29 +456,8 @@ function ExportExcel() {
     righeExcel.push("Sesso");
     righeExcel.push("Data Nascita");
     righeExcel.push("Età");
-    /*
-    if (selezionati[1] == "selid") righeExcel.push("Id");
-    if (selezionati[2] == "selcf") righeExcel.push("Codice Fiscale");
-    if (selezionati[3] == "selcog") righeExcel.push("Cognome");
-    if (selezionati[4] == "selnom") righeExcel.push("Nome");
-    if (selezionati[5] == "selruo") righeExcel.push("Ruolo");
-    if (selezionati[6] == "seldatnasc") righeExcel.push("Data Nascita");
-    if (selezionati[7] == "selannnasc") righeExcel.push("Anno");
-    if (selezionati[8] == "seleta") righeExcel.push("Età");
-    if (selezionati[9] == "seletaprecisa") righeExcel.push("Età precisa");
-    if (selezionati[10] == "selluonas") righeExcel.push("Luogo nascita");
-    if (selezionati[11] == "selnaznas") righeExcel.push("Nazione nascita");
-    if (selezionati[12] == "selnaz") righeExcel.push("Nazionalità");
-    if (selezionati[13] == "selses") righeExcel.push("Sesso");
-    if (selezionati[14] == "selcogtit") righeExcel.push("Cognome Titolare");
-    if (selezionati[15] == "selnomtit") righeExcel.push("Nome Titolare");
-    if (selezionati[16] == "seltiptes") righeExcel.push("Tipo Tessera");
-    if (selezionati[17] == "selprda") righeExcel.push("Presentato da");
-    if (selezionati[18] == "selsos") righeExcel.push("Sospeso");
-    if (selezionati[19] == "selscad") righeExcel.push("Scadenza");
-    if (selezionati[20] == "seltf1") righeExcel.push("Telefono1");
-    if (selezionati[21] == "seltf2") righeExcel.push("Telefono2");
-*/
+    righeExcel.push("Comune"); 
+    righeExcel.push("Telefono"); 
     excel.push(righeExcel)
 
 
@@ -483,6 +472,8 @@ function ExportExcel() {
             var sessoComponente = famiglieFiltratePerRangeAnni[i].membri[k].Sesso
             var dataNascitaComponente = moment(famiglieFiltratePerRangeAnni[i].membri[k].Data_nascita).format("DD/MM/YYYY")
             var etaComponente = parseInt(famiglieFiltratePerRangeAnni[i].membri[k].Eta)
+            var comuneProponente = famiglieFiltratePerRangeAnni[i].comune;
+            var telefonoFamiglia = parseInt(famiglieFiltratePerRangeAnni[i].telefono);  
 
             if (k === 1) {
                 righeExcel = []
@@ -494,6 +485,8 @@ function ExportExcel() {
                 righeExcel.push(sessoComponente);
                 righeExcel.push(dataNascitaComponente);
                 righeExcel.push(etaComponente);
+                righeExcel.push(comuneProponente); 
+                righeExcel.push(telefonoFamiglia);    
                 excel.push(righeExcel)
                 z++
             }
@@ -507,6 +500,8 @@ function ExportExcel() {
                 righeExcel.push(sessoComponente);
                 righeExcel.push(dataNascitaComponente);
                 righeExcel.push(etaComponente);
+                righeExcel.push(comuneProponente); 
+                righeExcel.push(telefonoFamiglia);    
                 excel.push(righeExcel)
                 z++
             }
