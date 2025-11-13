@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="it">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="assets/lib/bootstrap-5.1.3/css/bootstrap.min.css">
+    <title>Estrazione dati ...</title>
+    <style>
+        .table th {
+            white-space: nowrap;
+        }
+
+        .table-responsive {
+            font-size: 0.8rem;
+        }
+
+        .table-bordered-black {
+            border: 2px solid #000 !important;
+        }
+
+        .table-bordered-black th,
+        .table-bordered-black td {
+            border: 1px solid #000 !important;
+        }
+
+        .border-acquisti-distribuito {
+            border-left: 2px solid #000 !important;
+            border-right: 2px solid #000 !important;
+        }
+
+        .border-mese {
+            border-left: 2px solid #000 !important;
+            border-right: 1px solid #000 !important;
+        }
+
+        .donazioni-total {
+            background-color: #e8f5e9 !important;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .donazioni-breakdown {
+            background-color: #f1f8e9 !important;
+        }
+
+        .formula-indicator {
+            position: absolute;
+            top: -8px;
+            right: 5px;
+            font-size: 0.7rem;
+            color: #2e7d32;
+            font-weight: normal;
+        }
+
+        .header-group {
+            border-bottom: 2px solid #000;
+            background-color: #f5f5f5;
+        }
+
+        .text-center-content {
+            text-align: center;
+        }
+
+        .fw-bold-content {
+            font-weight: bold !important;
+        }
+
+        .total-row {
+            background-color: #d4edda !important;
+            font-weight: bold;
+        }
+
+        /* Stili per il PDF */
+        @media print {
+            .table-responsive {
+                font-size: 0.7rem !important;
+            }
+            
+            .card {
+                border: none !important;
+                box-shadow: none !important;
+            }
+            
+            .alert {
+                display: none !important;
+            }
+            
+            .btn-group {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <br>
+    <div class="container-fluid">
+        <div class="row gy-3">
+
+            <!-- 🔹 Donazioni -->
+            <div class="col-md-4">
+                <div class="input-group">
+                    <span class="input-group-text text-success border-0 bg-transparent fw-bold">Donazioni:</span>
+                    <input class="form-control" type="file" id="fileDonazioni" onchange="Upload('Donazioni')"
+                        accept=".xls">
+                </div>
+            </div>
+
+            <!-- 🔹 Acquisti -->
+            <div class="col-md-4">
+                <div class="input-group">
+                    <span class="input-group-text text-danger border-0 bg-transparent fw-bold">Acquisti:</span>
+                    <input class="form-control" type="file" id="fileAcquisti" onchange="Upload('Acquisti')"
+                        accept=".xls">
+                </div>
+            </div>
+
+            <!-- 🔹 Distribuito -->
+            <div class="col-md-4">
+                <div class="input-group">
+                    <span class="input-group-text text-primary border-0 bg-transparent fw-bold">Distribuito:</span>
+                    <input class="form-control" type="file" id="fileDistribuito" onchange="Upload('Distribuito')"
+                        accept=".xls">
+                </div>
+            </div>
+        </div>
+
+        <!-- 🔹 Pulsanti e sezione report -->
+        <div class="text-center mt-4">
+            <div class="d-flex justify-content-center gap-3">
+                <button id="btnReport" class="btn btn-outline-dark d-none" onclick="creaReport()">📊 Crea Report</button>
+                <button id="btnPdf" class="btn btn-outline-danger d-none" onclick="generaPDF()">📄 Genera PDF</button>
+            </div>
+        </div>
+
+        <div id="reportOutput" class="mt-4"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="assets/lib/bootstrap-5.1.3/js/bootstrap.bundle.min.js"></script>
+    <!-- Aggiungi html2pdf -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <script>
+        // 🔹 Variabili globali per salvare i JSON
+        let jsonDonazioni = [];
+        let jsonAcquisti = [];
+        let jsonDistribuito = [];
+
+        function Upload(tipo) {
+            const fileInput = document.getElementById("file" + tipo);
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert("Seleziona un file per " + tipo + " prima di procedere.");
+                return;
+            }
+
+            // 🔹 Verifica che il nome del file contenga la parola chiave corretta
+            const fileName = file.name.toLowerCase();
+            let requiredKeyword = "";
+
+            switch (tipo) {
+                case "Donazioni":
+                    requiredKeyword = "donazioni";
+                    break;
+                case "Acquisti":
+                    requiredKeyword = "acquisti";
+                    break;
+                case "Distribuito":
+                    requiredKeyword = "venduto";
+                    break;
+            }
+
+            if (!fileName.includes(requiredKeyword)) {
+                alert(`Il file per ${tipo} deve contenere la parola "${requiredKeyword}" nel nome.`);
+                fileInput.value = ""; // Reset del campo file
+                return;
+            }
+
+            if (typeof FileReader === "undefined") {
+                alert("Questo browser non supporta HTML5 FileReader.");
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const content = e.target.result;
+                const parser = new DOMParser();
+                const htmlDoc = parser.parseFromString(content, "text/html");
+                const table = htmlDoc.querySelector("table");
+
+                if (!table) {
+                    alert("Nessuna tabella trovata nel file caricato per " + tipo + "!");
+                    return;
+                }
+
+                // 🔹 Definizione delle chiavi (tutte senza accenti)
+                let keys = [];
+                switch (tipo) {
+                    case "Donazioni":
+                        keys = [
+                            "DATA", "RAGIONE_SOCIALE", "DDT", "PRODOTTO", "DESCRIZIONE",
+                            "UM", "CONTENUTO", "TIPOLOGIA", "CATEGORIA",
+                            "QTA", "QUANTITA_TOTALE", "PUNTI", "AGEA"
+                        ];
+                        break;
+
+                    case "Acquisti":
+                        keys = [
+                            "DATA", "RAGIONE_SOCIALE", "DDT", "PRODOTTO", "DESCRIZIONE",
+                            "UM", "CONTENUTO", "TIPOLOGIA", "CATEGORIA",
+                            "QTA", "QUANTITA_TOTALE", "PUNTI", "AGEA"
+                        ];
+                        break;
+
+                    case "Distribuito":
+                        keys = [
+                            "DATA", "BARCODE", "DESCRIZIONE", "UM", "CONTENUTO",
+                            "TIPOLOGIA", "CATEGORIA", "PUNTI", "SCONTATO",
+                            "QTA", "QUANTITA_TOTALE", "AGEA"
+                        ];
+                        break;
+                }
+
+                // 🔹 Conversione tabella → array di oggetti
+                const data = Array.from(table.rows)
+                    .slice(1)
+                    .map(row => {
+                        const cells = row.cells;
+                        const obj = {};
+                        keys.forEach((key, i) => {
+                            obj[key] = cells[i] ? cells[i].textContent.trim() : "";
+                        });
+                        return obj;
+                    });
+
+                // 🔹 Salvataggio nella variabile globale
+                switch (tipo) {
+                    case "Donazioni":
+                        jsonDonazioni = data;
+                        break;
+                    case "Acquisti":
+                        jsonAcquisti = data;
+                        break;
+                    case "Distribuito":
+                        jsonDistribuito = data;
+                        break;
+                }
+
+                console.log(`📂 File caricato: ${tipo}`);
+                console.log(data);
+
+                // 🔹 Mostra pulsante se tutti i file sono caricati
+                if (jsonDonazioni.length && jsonAcquisti.length && jsonDistribuito.length) {
+                    document.getElementById("btnReport").classList.remove("d-none");
+                    document.getElementById("btnPdf").classList.remove("d-none");
+                }
+            };
+
+            reader.readAsText(fileInput.files[0]);
+        }
+
+        // 🔹 Funzione per creare il report
+        function creaReport() {
+            // Converte stringa in numero (rimuove eventuali virgole o punti)
+            const toNumber = val => parseFloat((val || "0").replace(",", ".").replace(/[^\d.-]/g, "")) || 0;
+
+            // Funzione per estrarre mese e anno dalla data (formato dd/mm/aaaa)
+            const getMeseAnno = (dataStr) => {
+                if (!dataStr) return null;
+                const parts = dataStr.split('/');
+                if (parts.length !== 3) return null;
+                return {
+                    mese: parseInt(parts[1], 10),
+                    anno: parseInt(parts[2], 10)
+                };
+            };
+
+            // 🔹 Calcolo report mensile
+            const reportMensile = [];
+
+            // Inizializza i 12 mesi
+            for (let mese = 1; mese <= 12; mese++) {
+                reportMensile[mese] = {
+                    donazioni: 0,
+                    donazioniAGEA: 0,
+                    donazioniBANCO: 0,
+                    donazioniALTRO: 0,
+                    acquisti: 0,
+                    distribuito: 0,
+                    distribuitoAGEA: 0,
+                    distribuitoALTRO: 0
+                };
+            }
+
+            // Popola i dati mensili
+            jsonDonazioni.forEach(d => {
+                const meseAnno = getMeseAnno(d.DATA);
+                if (meseAnno) {
+                    const quantita = toNumber(d.QUANTITA_TOTALE) / 100000;
+                    reportMensile[meseAnno.mese].donazioni += quantita;
+
+                    // Categorizza per tipo di donazione
+                    if (d.RAGIONE_SOCIALE === "AGEA") {
+                        reportMensile[meseAnno.mese].donazioniAGEA += quantita;
+                    } else if (d.RAGIONE_SOCIALE === "ASSOCIAZIONE BANCO ALIMENTARE DEL VENETO ONLUS") {
+                        reportMensile[meseAnno.mese].donazioniBANCO += quantita;
+                    } else {
+                        reportMensile[meseAnno.mese].donazioniALTRO += quantita;
+                    }
+                }
+            });
+
+            jsonAcquisti.forEach(a => {
+                const meseAnno = getMeseAnno(a.DATA);
+                if (meseAnno) {
+                    reportMensile[meseAnno.mese].acquisti += toNumber(a.QUANTITA_TOTALE) / 100000;
+                }
+            });
+
+            jsonDistribuito.forEach(d => {
+                const meseAnno = getMeseAnno(d.DATA);
+                if (meseAnno) {
+                    const quantita = toNumber(d.QUANTITA_TOTALE) / 100000;
+                    reportMensile[meseAnno.mese].distribuito += quantita;
+
+                    // Categorizza per tipo di distribuito
+                    if (d.AGEA === "1") {
+                        reportMensile[meseAnno.mese].distribuitoAGEA += quantita;
+                    } else {
+                        reportMensile[meseAnno.mese].distribuitoALTRO += quantita;
+                    }
+                }
+            });
+
+            console.log("📊 Report Mensile:", reportMensile);
+
+            // Nomi dei mesi in italiano
+            const nomiMesi = [
+                "Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno",
+                "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"
+            ];
+
+            // 🔹 Calcolo dei totali
+            let totali = {
+                donazioni: 0,
+                donazioniAGEA: 0,
+                donazioniBANCO: 0,
+                donazioniALTRO: 0,
+                acquisti: 0,
+                distribuito: 0,
+                distribuitoAGEA: 0,
+                distribuitoALTRO: 0
+            };
+
+            for (let mese = 1; mese <= 12; mese++) {
+                totali.donazioni += reportMensile[mese].donazioni;
+                totali.donazioniAGEA += reportMensile[mese].donazioniAGEA;
+                totali.donazioniBANCO += reportMensile[mese].donazioniBANCO;
+                totali.donazioniALTRO += reportMensile[mese].donazioniALTRO;
+                totali.acquisti += reportMensile[mese].acquisti;
+                totali.distribuito += reportMensile[mese].distribuito;
+                totali.distribuitoAGEA += reportMensile[mese].distribuitoAGEA;
+                totali.distribuitoALTRO += reportMensile[mese].distribuitoALTRO;
+            }
+
+            // 🔹 Generazione HTML report mensile
+            let htmlMensile = `
+                <div class="card shadow-sm mb-4" id="reportContent">
+                    <div class="card-body p-3">
+                        <h5 class="mb-3 text-center">Report Annuale - Quantità in Quintali</h5>
+                        <div class="alert alert-info mb-3 p-2 small" role="alert">
+                            <strong>Nota:</strong> Il valore nella colonna <strong>Totale</strong> delle <strong>DONAZIONI</strong> è la somma delle tre colonne successive: <strong>AGEA</strong>, <strong>BANCO</strong> e <strong>ALTRO</strong>.
+                            <br><strong>Nota:</strong> Il valore nella colonna <strong>Totale</strong> del <strong>DISTRIBUITO</strong> è la somma delle due colonne successive: <strong>AGEA</strong>, e <strong>ALTRO</strong>.                        
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover table-bordered-black mb-0">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th class="border-mese p-1"></th>
+                                        <th colspan="4" class="text-center header-group p-1" style="background-color: #28a745">DONAZIONI</th>
+                                        <th colspan="1" class="text-center header-group border-acquisti-distribuito p-1" style="background-color: #6c757d">ACQUISTI</th>
+                                        <th colspan="3" class="text-center border-acquisti-distribuito p-1" style="background-color: #007bff;">DISTRIBUITO</th>
+                                    </tr>
+                                    <tr>
+                                        <th class="border-mese p-1">Mese</th>
+                                        <th class="text-success donazioni-total text-center-content p-1">
+                                            Totale
+                                        </th>
+                                        <th class="text-success donazioni-breakdown text-center-content p-1">AGEA</th>
+                                        <th class="text-success donazioni-breakdown text-center-content p-1">BANCO</th>
+                                        <th class="text-success donazioni-breakdown text-center-content p-1">ALTRO</th>
+                                        <th class="text-danger donazioni-breakdown text-center-content p-1">Totale</th>
+                                        <th class="text-primary donazioni-breakdown border-acquisti-distribuito text-center-content p-1">Totale</th>
+                                        <th class="text-primary donazioni-breakdown text-center-content p-1">AGEA</th>
+                                        <th class="text-primary donazioni-breakdown text-center-content p-1">ALTRO</th>                                    
+                                    </tr>
+                                </thead>
+                                <tbody>
+            `;
+
+            for (let mese = 1; mese <= 12; mese++) {
+                // Verifica che la somma delle componenti sia uguale al totale (entro un margine di errore)
+                const sommaComponenti = reportMensile[mese].donazioniAGEA +
+                    reportMensile[mese].donazioniBANCO +
+                    reportMensile[mese].donazioniALTRO;
+                const differenza = Math.abs(reportMensile[mese].donazioni - sommaComponenti);
+                const isValid = differenza < 0.01; // Margine di errore di 0.01 quintali
+
+                htmlMensile += `
+                    <tr>
+                        <td class="border-mese p-1"><strong>${nomiMesi[mese - 1]}</strong></td>
+                        <td class="donazioni-total text-center-content p-1 ${isValid ? '' : 'table-warning'}">${reportMensile[mese].donazioni.toFixed(2)}</td>
+                        <td class="donazioni-breakdown text-center-content p-1">${reportMensile[mese].donazioniAGEA.toFixed(2)}</td>
+                        <td class="donazioni-breakdown text-center-content p-1">${reportMensile[mese].donazioniBANCO.toFixed(2)}</td>
+                        <td class="donazioni-breakdown text-center-content p-1">${reportMensile[mese].donazioniALTRO.toFixed(2)}</td>
+                        <td class="border-acquisti-distribuito text-center-content fw-bold-content p-1">${reportMensile[mese].acquisti.toFixed(2)}</td>
+                        <td class="border-acquisti-distribuito text-center-content fw-bold-content p-1">${reportMensile[mese].distribuito.toFixed(2)}</td>
+                        <td class="donazioni-breakdown text-center-content p-1">${reportMensile[mese].distribuitoAGEA.toFixed(2)}</td>
+                        <td class="donazioni-breakdown text-center-content p-1">${reportMensile[mese].distribuitoALTRO.toFixed(2)}</td>                  
+                    </tr>
+                `;
+            }
+
+            // 🔹 Aggiungi riga dei totali
+            htmlMensile += `
+                    <tr class="total-row">
+                        <td class="border-mese p-1"><strong>TOTALE</strong></td>
+                        <td class="donazioni-total text-center-content p-1">${totali.donazioni.toFixed(2)}</td>
+                        <td class="donazioni-breakdown text-center-content p-1">${totali.donazioniAGEA.toFixed(2)}</td>
+                        <td class="donazioni-breakdown text-center-content p-1">${totali.donazioniBANCO.toFixed(2)}</td>
+                        <td class="donazioni-breakdown text-center-content p-1">${totali.donazioniALTRO.toFixed(2)}</td>
+                        <td class="border-acquisti-distribuito text-center-content fw-bold-content p-1">${totali.acquisti.toFixed(2)}</td>
+                        <td class="border-acquisti-distribuito text-center-content fw-bold-content p-1">${totali.distribuito.toFixed(2)}</td>
+                        <td class="donazioni-breakdown text-center-content p-1">${totali.distribuitoAGEA.toFixed(2)}</td>
+                        <td class="donazioni-breakdown text-center-content p-1">${totali.distribuitoALTRO.toFixed(2)}</td>
+                    </tr>
+                </tbody>
+            `;
+
+            htmlMensile += `
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById("reportOutput").innerHTML = htmlMensile;
+        }
+
+        // 🔹 Funzione per generare PDF
+        function generaPDF() {
+            const element = document.getElementById('reportContent');
+            
+            if (!element) {
+                alert('Prima crea il report!');
+                return;
+            }
+
+            // Opzioni per il PDF
+            const opt = {
+                margin: 0.5,
+                filename: 'report_annuale.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { 
+                    scale: 2,
+                    useCORS: true,
+                    scrollX: 0,
+                    scrollY: 0
+                },
+                jsPDF: { 
+                    unit: 'mm', 
+                    format: 'a4', 
+                    orientation: 'landscape' 
+                },
+                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+            };
+
+            // Genera il PDF
+            html2pdf().set(opt).from(element).save();
+        }
+    </script>
+
+</body>
+
+</html>
