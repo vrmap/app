@@ -281,58 +281,63 @@
                 };
             };
 
-            // 🔹 Calcolo report mensile
-            const reportMensile = [];
+            // 🔹 Calcolo report mensile (supporta più anni)
+            const reportData = [];
 
-            // Inizializza i 12 mesi
-            for (let mese = 1; mese <= 12; mese++) {
-                reportMensile[mese] = {
-                    donazioni: 0,
-                    donazioniAGEA: 0,
-                    donazioniBANCO: 0,
-                    donazioniFRESCO: 0,                    
-                    donazioniALTRO: 0,
-                    acquisti: 0,
-                    distribuito: 0,
-                    distribuitoAGEA: 0,
-                    distribuitoFRESCO: 0,
-                    distribuitoALTRO: 0
-                };
-            }
+            // Helper per trovare o creare un elemento per anno+mese
+            const getOrCreate = (anno, mese) => {
+                let item = reportData.find(r => r.anno === anno && r.mese === mese);
+                if (!item) {
+                    item = {
+                        anno: anno,
+                        mese: mese,
+                        donazioni: 0,
+                        donazioniAGEA: 0,
+                        donazioniBANCO: 0,
+                        donazioniFRESCO: 0,
+                        donazioniALTRO: 0,
+                        acquisti: 0,
+                        distribuito: 0,
+                        distribuitoAGEA: 0,
+                        distribuitoFRESCO: 0,
+                        distribuitoALTRO: 0
+                    };
+                    reportData.push(item);
+                }
+                return item;
+            };
 
             // Popola i dati mensili
             jsonDonazioni.forEach(d => {
                 const meseAnno = getMeseAnno(d.DATA);
                 if (meseAnno) {
                     const quantita = toNumber(d.QUANTITA_TOTALE) / 100000;
-                    reportMensile[meseAnno.mese].donazioni += quantita;
+                    const item = getOrCreate(meseAnno.anno, meseAnno.mese);
+                    item.donazioni += quantita;
 
                     // Categorizza per tipo di donazione
                     if (d.RAGIONE_SOCIALE === "AGEA") {
-                        reportMensile[meseAnno.mese].donazioniAGEA += quantita;
+                        item.donazioniAGEA += quantita;
                     } else if (d.RAGIONE_SOCIALE === "ASSOCIAZIONE BANCO ALIMENTARE DEL VENETO ONLUS") {
-                        reportMensile[meseAnno.mese].donazioniBANCO += quantita;
+                        item.donazioniBANCO += quantita;
                     } else if (d.DESCRIZIONE === "Verdura e frutta fresca") {
-                        reportMensile[meseAnno.mese].donazioniFRESCO += quantita;
+                        item.donazioniFRESCO += quantita;
                     } else if (d.RAGIONE_SOCIALE === "ALDI SRL") {
-                        reportMensile[meseAnno.mese].donazioniFRESCO += quantita;
+                        item.donazioniFRESCO += quantita;
                     } else if (d.RAGIONE_SOCIALE === "Ditta Ravagnini") {
-                        reportMensile[meseAnno.mese].donazioniFRESCO += quantita;
+                        item.donazioniFRESCO += quantita;
                     } else if (d.RAGIONE_SOCIALE === "Associazione Da Spreco A Risorsa") {
-                        reportMensile[meseAnno.mese].donazioniFRESCO += quantita;
+                        item.donazioniFRESCO += quantita;
                     } else if (d.RAGIONE_SOCIALE === "Agricoltori Povegliano") {
-                        reportMensile[meseAnno.mese].donazioniFRESCO += quantita;
+                        item.donazioniFRESCO += quantita;
                     } else if (d.RAGIONE_SOCIALE === "Associazione Betania ODV") {
-                        reportMensile[meseAnno.mese].donazioniFRESCO += quantita;
+                        item.donazioniFRESCO += quantita;
                     } else if (d.RAGIONE_SOCIALE === "Da Spreco A Risorse ODV") {
-                        reportMensile[meseAnno.mese].donazioniFRESCO += quantita;
+                        item.donazioniFRESCO += quantita;
                     } else if (d.RAGIONE_SOCIALE === "FACCI LA PIZZA SRL") {
-                        reportMensile[meseAnno.mese].donazioniFRESCO += quantita;
-
-
-
+                        item.donazioniFRESCO += quantita;
                     } else {
-                        reportMensile[meseAnno.mese].donazioniALTRO += quantita;
+                        item.donazioniALTRO += quantita;
                     }
                 }
             });
@@ -340,7 +345,9 @@
             jsonAcquisti.forEach(a => {
                 const meseAnno = getMeseAnno(a.DATA);
                 if (meseAnno) {
-                    reportMensile[meseAnno.mese].acquisti += toNumber(a.QUANTITA_TOTALE) / 100000;
+                    const quantita = toNumber(a.QUANTITA_TOTALE) / 100000;
+                    const item = getOrCreate(meseAnno.anno, meseAnno.mese);
+                    item.acquisti += quantita;
                 }
             });
 
@@ -348,22 +355,27 @@
                 const meseAnno = getMeseAnno(d.DATA);
                 if (meseAnno) {
                     const quantita = toNumber(d.QUANTITA_TOTALE) / 100000;
-                    reportMensile[meseAnno.mese].distribuito += quantita;
+                    const item = getOrCreate(meseAnno.anno, meseAnno.mese);
+                    item.distribuito += quantita;
 
                     // Categorizza per tipo di distribuito
                     if (d.AGEA === "1") {
-                        reportMensile[meseAnno.mese].distribuitoAGEA += quantita;
+                        item.distribuitoAGEA += quantita;
                     } else if (d.DESCRIZIONE === "Verdura e frutta fresca") {
-                        reportMensile[meseAnno.mese].distribuitoFRESCO += quantita;
-                    }
-                    else {
-                        reportMensile[meseAnno.mese].distribuitoALTRO += quantita;
+                        item.distribuitoFRESCO += quantita;
+                    } else {
+                        item.distribuitoALTRO += quantita;
                     }
                 }
             });
 
-            console.log("📊 Report Mensile:", reportMensile);
-            //console.log(distribuitoFRESCO)
+            // Ordina cronologicamente per anno e mese
+            reportData.sort((a, b) => {
+                if (a.anno !== b.anno) return a.anno - b.anno;
+                return a.mese - b.mese;
+            });
+
+            console.log("📊 Report Mensile:", reportData);
 
             // Nomi dei mesi in italiano
             const nomiMesi = [
@@ -371,38 +383,63 @@
                 "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"
             ];
 
-            // 🔹 Calcolo dei totali
+            // 🔹 Calcolo dei totali generali
             let totali = {
                 donazioni: 0,
                 donazioniAGEA: 0,
                 donazioniBANCO: 0,
-                donazioniFRESCO: 0,                
+                donazioniFRESCO: 0,
                 donazioniALTRO: 0,
                 acquisti: 0,
                 distribuito: 0,
                 distribuitoAGEA: 0,
-                distribuitoFRESCO: 0,                
+                distribuitoFRESCO: 0,
                 distribuitoALTRO: 0
             };
 
-            for (let mese = 1; mese <= 12; mese++) {
-                totali.donazioni += reportMensile[mese].donazioni;
-                totali.donazioniAGEA += reportMensile[mese].donazioniAGEA;
-                totali.donazioniBANCO += reportMensile[mese].donazioniBANCO;
-                totali.donazioniFRESCO += reportMensile[mese].donazioniFRESCO;                
-                totali.donazioniALTRO += reportMensile[mese].donazioniALTRO;
-                totali.acquisti += reportMensile[mese].acquisti;
-                totali.distribuito += reportMensile[mese].distribuito;
-                totali.distribuitoAGEA += reportMensile[mese].distribuitoAGEA;
-                totali.distribuitoFRESCO += reportMensile[mese].distribuitoFRESCO;                
-                totali.distribuitoALTRO += reportMensile[mese].distribuitoALTRO;
+            reportData.forEach(item => {
+                totali.donazioni += item.donazioni;
+                totali.donazioniAGEA += item.donazioniAGEA;
+                totali.donazioniBANCO += item.donazioniBANCO;
+                totali.donazioniFRESCO += item.donazioniFRESCO;
+                totali.donazioniALTRO += item.donazioniALTRO;
+                totali.acquisti += item.acquisti;
+                totali.distribuito += item.distribuito;
+                totali.distribuitoAGEA += item.distribuitoAGEA;
+                totali.distribuitoFRESCO += item.distribuitoFRESCO;
+                totali.distribuitoALTRO += item.distribuitoALTRO;
+            });
+
+            // 🔹 Calcolo range date (min/max) da tutti i dati
+            const tutteDate = [
+                ...jsonDonazioni.map(d => d.DATA),
+                ...jsonAcquisti.map(a => a.DATA),
+                ...jsonDistribuito.map(d => d.DATA)
+            ].filter(Boolean);
+
+            let dataInizio = "";
+            let dataFine = "";
+
+            if (tutteDate.length > 0) {
+                // Ordina le date (formato dd/mm/aaaa) come stringhe
+                const dateOrdinate = tutteDate.sort((a, b) => {
+                    const [giA, meA, anA] = a.split('/').map(Number);
+                    const [giB, meB, anB] = b.split('/').map(Number);
+                    return new Date(anA, meA - 1, giA) - new Date(anB, meB - 1, giB);
+                });
+                dataInizio = dateOrdinate[0];
+                dataFine = dateOrdinate[dateOrdinate.length - 1];
             }
+
+            const titolo = dataInizio && dataFine
+                ? `Report dal ${dataInizio} al ${dataFine} - Quantità in Quintali`
+                : "Report - Quantità in Quintali";
 
             // 🔹 Generazione HTML report mensile
             let htmlMensile = `
                 <div class="card shadow-sm mb-4" id="reportContent">
                     <div class="card-body p-3">
-                        <h5 class="mb-3 text-center">Report - Quantità in Quintali</h5>
+                        <h5 class="mb-3 text-center">${titolo}</h5>
                         <div class="alert alert-info mb-3 p-2 small" role="alert">
                             <strong>Nota:</strong> Il valore nella colonna <strong>Totale</strong> delle <strong>DONAZIONI</strong> è la somma delle tre colonne successive: <strong>AGEA</strong>, <strong>BANCO</strong>, <strong>ECCEDENZE</strong> e <strong>ALTRO</strong>.
                             <br><strong>Nota:</strong> Il valore nella colonna <strong>Totale</strong> del <strong>DISTRIBUITO</strong> è la somma delle tre colonne successive: <strong>AGEA</strong>, <strong>FRESCO</strong>, e <strong>ALTRO</strong>.                        
@@ -436,28 +473,29 @@
                                 <tbody>
             `;
 
-            for (let mese = 1; mese <= 12; mese++) {
+            for (let i = 0; i < reportData.length; i++) {
+                const item = reportData[i];
                 // Verifica che la somma delle componenti sia uguale al totale (entro un margine di errore)
-                const sommaComponenti = reportMensile[mese].donazioniAGEA +
-                    reportMensile[mese].donazioniBANCO +
-                    reportMensile[mese].donazioniFRESCO +                    
-                    reportMensile[mese].donazioniALTRO;
-                const differenza = Math.abs(reportMensile[mese].donazioni - sommaComponenti);
+                const sommaComponenti = item.donazioniAGEA +
+                    item.donazioniBANCO +
+                    item.donazioniFRESCO +
+                    item.donazioniALTRO;
+                const differenza = Math.abs(item.donazioni - sommaComponenti);
                 const isValid = differenza < 0.01; // Margine di errore di 0.01 quintali
 
                 htmlMensile += `
                     <tr>
-                        <td class="border-mese p-1"><strong>${nomiMesi[mese - 1]}</strong></td>
-                        <td class="donazioni-total text-center-content p-1 ${isValid ? '' : 'table-warning'}">${reportMensile[mese].donazioni.toFixed(2)}</td>
-                        <td class="donazioni-breakdown text-center-content p-1">${reportMensile[mese].donazioniAGEA.toFixed(2)}</td>
-                        <td class="donazioni-breakdown text-center-content p-1">${reportMensile[mese].donazioniBANCO.toFixed(2)}</td>
-                        <td class="donazioni-breakdown text-center-content p-1">${reportMensile[mese].donazioniFRESCO.toFixed(2)}</td>                        
-                        <td class="donazioni-breakdown text-center-content p-1">${reportMensile[mese].donazioniALTRO.toFixed(2)}</td>
-                        <td class="border-acquisti-distribuito text-center-content fw-bold-content p-1">${reportMensile[mese].acquisti.toFixed(2)}</td>
-                        <td class="border-acquisti-distribuito text-center-content fw-bold-content p-1">${reportMensile[mese].distribuito.toFixed(2)}</td>
-                        <td class="donazioni-breakdown text-center-content p-1">${reportMensile[mese].distribuitoAGEA.toFixed(2)}</td>
-                        <td class="donazioni-breakdown text-center-content p-1">${reportMensile[mese].distribuitoFRESCO.toFixed(2)}</td>                        
-                        <td class="donazioni-breakdown text-center-content p-1">${reportMensile[mese].distribuitoALTRO.toFixed(2)}</td>                  
+                        <td class="border-mese p-1"><strong>${nomiMesi[item.mese - 1]} ${item.anno}</strong></td>
+                        <td class="donazioni-total text-center-content p-1 ${isValid ? '' : 'table-warning'}">${item.donazioni.toFixed(2)}</td>
+                        <td class="donazioni-breakdown text-center-content p-1">${item.donazioniAGEA.toFixed(2)}</td>
+                        <td class="donazioni-breakdown text-center-content p-1">${item.donazioniBANCO.toFixed(2)}</td>
+                        <td class="donazioni-breakdown text-center-content p-1">${item.donazioniFRESCO.toFixed(2)}</td>                        
+                        <td class="donazioni-breakdown text-center-content p-1">${item.donazioniALTRO.toFixed(2)}</td>
+                        <td class="border-acquisti-distribuito text-center-content fw-bold-content p-1">${item.acquisti.toFixed(2)}</td>
+                        <td class="border-acquisti-distribuito text-center-content fw-bold-content p-1">${item.distribuito.toFixed(2)}</td>
+                        <td class="donazioni-breakdown text-center-content p-1">${item.distribuitoAGEA.toFixed(2)}</td>
+                        <td class="donazioni-breakdown text-center-content p-1">${item.distribuitoFRESCO.toFixed(2)}</td>                        
+                        <td class="donazioni-breakdown text-center-content p-1">${item.distribuitoALTRO.toFixed(2)}</td>                  
                     </tr>
                 `;
             }
